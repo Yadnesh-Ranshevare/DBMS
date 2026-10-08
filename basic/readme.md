@@ -6,6 +6,7 @@
 4. [File System as Database](#file-system-as-database)
 5. [DBMS vs File System](#dbms-vs-file-system)
 6. [Database System](#database-system)
+7. [Three-schema architecture](#three-schema-architecture)
 
 ---
 
@@ -398,6 +399,80 @@ Student App
 | **Database**        | Collection of organized data         |
 | **DBMS**            | Software that manages the database   |
 | **Database System** | Database + DBMS + applications/users |
+
+[Go To Top](#content)
+
+---
+# Three-schema architecture
+Three-schema architecture is the DBMS architecture that divides a database into three levels (schemas) to separate the user's view from the physical storage of data.
+
+Three-schema architecture is also refer as three levels of data abstraction
+
+The three levels of data abstraction in DBMS are used to hide unnecessary implementation details from users.
+
+>Abstraction is the process of removing or hiding unnecessary details to focus on the essential features of an idea, object, or system.
+
+<img src="./img/three-level-abstraction.png" style="width:500px"/>
+
+### 1. Physical schema (Internal Level) — "How?"
+The lowest level. It describes how data is physically stored in the database.
+
+It deals with things like:
+
+- File organization
+- Indexes
+- Storage blocks
+- Data structures
+- Physical storage location
+
+Example:\
+A `Student` table may be stored using B+ tree indexes and disk blocks.
+
+Question it answers: How is the data stored?
+
+### 2. Logical schema (Conceptual Level) — "What?"
+The middle level. It describes what data is stored and the relationships between the data.
+
+> Its like a blue print of the data
+
+
+For example:
+```
+Student
+---------
+id
+name
+email
+course
+```
+And:
+
+```
+Student ─── belongs to ─── Course
+```
+It doesn't care about the physical storage details.
+
+Question it answers: What data is stored?
+
+> Developer use logical schema to write the code
+
+### 3. View schema (External Level) — "What does the user see?"
+The highest level. It describes the part of the database that a particular user is allowed to see.
+
+For example:
+```
+Student sees:
+Name, Course, Marks
+
+Admin sees:
+ID, Name, Email, Course, Marks, Fees
+```
+
+Both are accessing the same database, but they see different information.
+
+Question it answers: What does the user see?
+
+
 
 [Go To Top](#content)
 
