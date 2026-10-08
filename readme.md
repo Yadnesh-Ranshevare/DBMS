@@ -4,6 +4,8 @@
 ## Topics
 
 1. [Basic](./basic/readme.md)
+2. [ER Model](./ER-model/readme.md)
 
 ----
 ## Acknowledgment
+- [freeCodeCamp.org](https://www.youtube.com/@freecodecamp): relational database course (https://www.youtube.com/watch?v=NdeeSEknp58&t=4117s)
