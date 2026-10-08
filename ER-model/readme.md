@@ -322,6 +322,101 @@ Simple definition:
 > Entity = What we store information about\
 > Attribute = What information we store about it
 
+### Domain
+Domain of an attribute is the set of all valid values that the attribute can take.
+
+Example\
+For a `Student` entity:
+```
+Age → Domain = {1, 2, 3, ..., 100}
+```
+This means `Age` can only contain values within the defined valid range.
+
+Another examples:
+```
+Gender → Domain = {Male, Female, Other}
+
+Student
+├── Age      → Domain: 1–100
+├── Name     → Domain: valid text strings
+└── Email    → Domain: valid email strings
+```
+
+### Types of Attributes
+attributes are commonly classified into 5 types:
+
+1. **Simple (Atomic) Attribute**
+    - An attribute that cannot be divided into smaller meaningful parts.
+    - Example:
+        ```
+        Age
+        Salary
+        Gender
+        ```
+        `Age` cannot meaningfully be divided further.
+    - Symbol: Single oval.
+2. **Composite Attribute**
+    - An attribute that can be divided into smaller attributes.
+    - Example:
+        ```
+        Name
+        ├── First_Name
+        ├── Middle_Name
+        └── Last_Name
+        ```
+        Here, `Name` is a composite attribute.
+    - Symbol: Oval connected to smaller ovals
+3. **Single-Valued Attribute**
+    - An attribute that has only one value for each entity instance.
+    - Example:
+        ```
+        Student_ID = 101
+        ```
+        A student has one `Student_ID`.
+    - Symbol: Single oval
+4. **Multi-Valued Attribute**
+    - An attribute that can have multiple values for a single entity instance.
+    - Example:
+        ```
+        Student
+        Phone_Number = {9876543210, 9123456780}
+        ```
+        A student can have multiple phone numbers.
+    - Symbol: Double oval.
+
+5. **Derived Attribute**
+    - An attribute whose value can be calculated from another attribute or attributes.
+    - Example:
+        ```
+        Date_of_Birth → Age
+        ```
+        If we know the student's date of birth, we can calculate their current age.
+    - Symbol: Dashed oval.
+6. **Key Attribute**
+    - A key attribute is an attribute whose value uniquely identifies each entity instance within an entity set.
+    - Example:
+        ```
+        Student
+        ├── Student_ID  ← Key Attribute
+        ├── Name
+        ├── Age
+        └── Email
+        ```
+        Each `Student_ID` is unique, so it can identify a particular student.
+    - Symbol: Single oval with underlining the attribute name
+
+### Summary
+| Attribute Type         | Definition                                                                   | Example                                     | Symbol                                  |
+| ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------- |
+| **1. Simple (Atomic)** | An attribute that **cannot be divided** into smaller meaningful parts.       | `Age`, `Salary`, `Gender`                   | **Single oval**                         |
+| **2. Composite**       | An attribute that **can be divided** into smaller meaningful attributes.     | `Name → First_Name, Middle_Name, Last_Name` | **Oval connected to smaller ovals**     |
+| **3. Single-Valued**   | An attribute that has **only one value** for each entity instance.           | `Student_ID = 101`                          | **Single oval**                         |
+| **4. Multi-Valued**    | An attribute that can have **multiple values** for a single entity instance. | `Phone_Number = {9876..., 9123...}`         | **Double oval**                         |
+| **5. Derived**         | An attribute whose value is **calculated from another attribute(s)**.        | `Date_of_Birth → Age`                       | **Dashed oval**                         |
+| **6. Key Attribute**   | An attribute whose value **uniquely identifies** each entity instance.       | `Student_ID`                                | **Oval with underlined attribute name** |
+
+
+
 [Go To Top](#content)
 
 ---
@@ -341,6 +436,8 @@ Here:
 - Student → Entity
 - Course → Entity
 - Enrolls in → Relationship
+
+### Descriptive Attribute
 
 [Go To Top](#content)
 
