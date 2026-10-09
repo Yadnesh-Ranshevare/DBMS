@@ -9,3 +9,4 @@
 ----
 ## Acknowledgment
 - [freeCodeCamp.org](https://www.youtube.com/@freecodecamp): relational database course (https://www.youtube.com/watch?v=NdeeSEknp58&t=4117s)
+- [Mahesh Huddar](https://www.youtube.com/@MaheshHuddar): types of relationships (https://www.youtube.com/watch?v=oxv3vT6DPBM)

@@ -323,16 +323,20 @@ Simple definition:
 > Attribute = What information we store about it
 
 ### Domain
+
 Domain of an attribute is the set of all valid values that the attribute can take.
 
 Example\
 For a `Student` entity:
+
 ```
 Age → Domain = {1, 2, 3, ..., 100}
 ```
+
 This means `Age` can only contain values within the defined valid range.
 
 Another examples:
+
 ```
 Gender → Domain = {Male, Female, Other}
 
@@ -343,6 +347,7 @@ Student
 ```
 
 ### Types of Attributes
+
 attributes are commonly classified into 5 types:
 
 1. **Simple (Atomic) Attribute**
@@ -404,8 +409,33 @@ attributes are commonly classified into 5 types:
         ```
         Each `Student_ID` is unique, so it can identify a particular student.
     - Symbol: Single oval with underlining the attribute name
+    - Type of keys:
+        1. **super key:**
+            - Any attribute or combination of attributes that uniquely identifies a particular instance of entity type.
+            - It may contain unnecessary attributes.
+            - Even if we remove those unnecessary attribute we will still be able to uniquely identify a particular instance of entity type.
+            - Example: `{student_id}` and `{student_id, name}`.
+        2. **candidate key:**
+            - A minimal attribute or combination of attributes that can uniquely identify a particular instance of entity type.
+            - A table can have multiple candidate keys.
+            - If you remove even a single attribute from the set you'll not be able to uniquely identify any particular instance of entity type.
+            - Example: `student_id` and `email`, if both are unique.
+                > every candidate key is a super key but not every super key is a candidate key
+        3. **Primary Key:**
+            - Uniquely identifies each record in a table.
+            - It cannot contain NULL or duplicate values.
+            - A entity type (table) can have only one primary key constraint.
+            - It is a candidate key selected as the main identifier.
+            - Example: `student_id`
+                > A candidate key is any minimal key that can uniquely identify a record, whereas a primary key is the candidate key selected to identify records in a table.
+        4. **Foreign Key:**
+            - An attribute that references a primary key or another eligible unique key in another (or the same) entity type (table).
+            - It maintains referential integrity (A foreign key must reference an existing primary kay in the parent table or be NULL if permitted.).
+            - Can have duplicate or NULL values
+            - Example: `department_id` in the Student table references `department_id` in the Department table.
 
 ### Summary
+
 | Attribute Type         | Definition                                                                   | Example                                     | Symbol                                  |
 | ---------------------- | ---------------------------------------------------------------------------- | ------------------------------------------- | --------------------------------------- |
 | **1. Simple (Atomic)** | An attribute that **cannot be divided** into smaller meaningful parts.       | `Age`, `Salary`, `Gender`                   | **Single oval**                         |
@@ -415,8 +445,6 @@ attributes are commonly classified into 5 types:
 | **5. Derived**         | An attribute whose value is **calculated from another attribute(s)**.        | `Date_of_Birth → Age`                       | **Dashed oval**                         |
 | **6. Key Attribute**   | An attribute whose value **uniquely identifies** each entity instance.       | `Student_ID`                                | **Oval with underlined attribute name** |
 
-
-
 [Go To Top](#content)
 
 ---
@@ -424,6 +452,10 @@ attributes are commonly classified into 5 types:
 # Relationship
 
 A relationship describes the association between two or more entities.
+
+symbol: diamond (◇)
+
+> According to the definition, it's present between instance of entity type but entity instance have no symbols in ER model, so we show them using entity type
 
 For example:
 
@@ -437,8 +469,69 @@ Here:
 - Course → Entity
 - Enrolls in → Relationship
 
+### Type of relationship:
+
+In an ER (Entity-Relationship) model, unary, binary, and ternary relationships are classified based on the number of entity types participating in a relationship.
+
+<img src="./img/type-of-relationship.png" style="width:500px"/>
+
+1. **Unary Relationship (Degree 1)**
+    - A unary relationship occurs when an entity type is related to itself. It is also called a recursive relationship.
+    - Example: An employee manages another employee.
+        - Entity: Employee
+        - Relationship: Manages
+        - Degree: 1 (Unary)
+    - Both sides involve the same entity type, Employee, although the employees can be different individuals.
+
+2. **Binary Relationship (Degree 2)**
+    - A binary relationship occurs when two entity types participate in a relationship.
+    - Example: A student enrolls in a course.
+        - Entity 1: Student
+        - Entity 2: Course
+        - Relationship: Enrolls
+        - Degree: 2 (Binary)
+    - This is the most common type of relationship in ER diagrams.
+3. **Ternary Relationship (Degree 3)**
+    - A ternary relationship occurs when three entity types participate in the same relationship simultaneously.
+    - Example: A supplier supplies a particular part to a particular project.
+        - Entity 1: Supplier
+        - Entity 2: Part
+        - Entity 3: Project
+        - Relationship: Supplies To
+        - Degree: 3 (Ternary)
+    - The relationship captures the combination of the supplier, part, and project together.
+
+### Cardinality in binary relationship
+Cardinality in a binary relationship tells us how many entities can be related to each other when two entity types participate in a relationship.
+
+>Cardinality specifies how many entities of one type can be related to an entity of another type.
+
+1. **One-to-One (1:1)**
+    - One entity is associated with at most one entity of another type, and vice versa.
+    - Example: One man can marry only one one woman
+2. **One-to-Many (1:N)**
+    - One entity can be associated with many entities of another type, but each of those entities is associated with at most one entity on the first side.
+    - Example: One department has many employees, but one employee can not work in many department.
+3. **Many-to-One (N:1)**
+    - Many entities of one type can be associated with a single entity of another type.
+    - Example: Many employees work in one department.
+    - It is just a reverse of **one to many**
+4. **Many-to-Many (M:N)**
+    - Many entities of one type can be associated with many entities of another type.
+    - Example: Many students enroll in many courses.
+
+| Cardinality | Meaning      | Example                |
+| ----------- | ------------ | ---------------------- |
+| 1:1         | One to one   | Person — Passport      |
+| 1:N         | One to many  | Department — Employees |
+| N:1         | Many to one  | Employees — Department |
+| M:N         | Many to many | Students — Courses     |
+
+
 ### Descriptive Attribute
 
 [Go To Top](#content)
 
 ---
+
+
