@@ -5,6 +5,7 @@
 
 1. [Basic](./basic/readme.md)
 2. [ER Model](./ER-model/readme.md)
+3. [Extended ER Model](./extended-ER-model/readme.md)
 
 ----
 ## Acknowledgment
