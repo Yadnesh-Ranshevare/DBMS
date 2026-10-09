@@ -528,10 +528,118 @@ Cardinality in a binary relationship tells us how many entities can be related t
 | M:N         | Many to many | Students — Courses     |
 
 
+### Total Participation
+Total participation is a constraint in an ER (Entity-Relationship) diagram where every entity in an entity set must participate in at least one relationship.
+
+In simple words, no entity can exist in that entity set without being involved in the specified relationship.
+
+**symbol: double line**
+
+**Example**
+
+Consider two entities: `Employee` and `Department`.
+```
+┌──────────┐                         ┌────────────┐
+│ Employee │======= Works_In ======> │ Department │
+└──────────┘                         └────────────┘
+```
+For this example:
+- Every `employee` must work in at least one `department`.
+- An `employee` cannot exist without participating in the `Works_In` relationship.
+- Therefore, `Employee` has total participation in `Works_In`.
+
+Total participation implies a minimum cardinality of 1 for the participating entity set in that relationship.
+
+> Minimum cardinality of 1 means every entity must participate in the relationship at least once.
+
+### Partial Participation
+Partial participation is a constraint in an ER diagram where some entities may not participate in a particular relationship.
+
+In simple words, participation in the relationship is optional.
+
+**symbol: single line**
+
+**Example**
+
+Suppose we have two entities: `Employee` and `Department`, with a relationship called `Manages`.
+```
+┌──────────┐                         ┌────────────┐
+│ Employee │────── Manages ────────> │ Department │
+└──────────┘                         └────────────┘
+```
+- Some employees manage a department.
+- Other employees do not manage any department.
+
+Therefore, `Employee` has partial participation in the `Manages` relationship.
+
+### Total vs. Partial Participation
+
+<img src="./img/total-vs-partial-participation.png" style="width:800px"/>
+
+here:
+- course to enrolled = partial participation
+- student to course = total participation
+
+explanation
+- A course may exist without any student (partial participation)
+- Every student must be enrolled in at least one course (total participation)
+
+| Total participation                                  | Partial participation                             |
+| ---------------------------------------------------- | ------------------------------------------------- |
+| Participation is mandatory.                          | Participation is optional.                        |
+| Minimum cardinality = 1                              | Minimum cardinality = 0                           |
+| Represented by a double line.                        | Represented by a single line.                     |
+| Example: Every employee must belong to a department. | Example: Not every employee manages a department. |
+
 ### Descriptive Attribute
+
+A descriptive attribute is an attribute that describes a property of a relationship between entities, rather than a property of an individual entity.
+
+**Example**
+
+Suppose we have two entities: `Student` and `Course`, connected by an `Enrolls` relationship.
+- A student has attributes like `Student_ID` and `Name`.
+- A course has attributes like `Course_ID` and `Course_Name`.
+- The relationship Enrolls can have attributes like `Enrollment_Date` and `Grade`.
+
+Here, `Enrollment_Date` and `Grade` are descriptive attributes because they describe the relationship between a particular student and a particular course.
+
+
+### Why do we need Descriptive Attribute?
+Descriptive attributes are needed to store information specific to a relationship between entities, especially when that information varies for each relationship instance.
+
+**Example: Student and Course**
+
+Suppose a student enrolls in multiple courses.
+- `Student`: Student_ID, Name
+- `Course`: Course_ID, Course_Name
+- `Enrolls`: Enrollment_Date, Grade
+
+Why do we need descriptive attributes here?
+
+Imagine Rahul enrolls in Java on 10 June and Python on 15 June.
+
+| Student | Course | Enrollment Date | Grade |
+| ------- | ------ | --------------- | ----- |
+| Rahul   | Java   | 10 June         | A     |
+| Rahul   | Python | 15 June         | B     |
+
+Notice that the enrollment date and grade can differ for each student-course combination.
+
+* Enrollment_Date tells us when the student enrolled in a particular course.
+
+* Grade tells us the student's result in that particular course.
+
+We cannot store these attributes directly in `Student`, because one student can enroll in multiple courses with different dates and grades.
+
+We cannot store them directly in `Course`, because multiple students can enroll in the same course and receive different grades.
+
+Therefore, we associate these attributes with the `Enrolls` relationship.
+
+> Entity attributes describe what an entity is; descriptive attributes describe what happens between entities.
+
 
 [Go To Top](#content)
 
 ---
-
 
