@@ -7,6 +7,7 @@
 2. [Entity Relationship Model (ER Model)](./ER-model/readme.md)
 3. [Extended Entity Relationship Model (EER Model)](./extended-ER-model/readme.md)
 4. [Formulating an ER model](./formulate/readme.md)
+5. [Relational Model](./relational-model/readme.md)
 
 ----
 ## Acknowledgment
