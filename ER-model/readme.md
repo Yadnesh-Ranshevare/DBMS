@@ -98,7 +98,22 @@ It tells the DBMS what entities exist, what attributes they have, and how they a
         - Delete data
     - For example, SQL provides commands such as `INSERT`, `SELECT`, `UPDATE`, and `DELETE`.
 
-3. **Integrity Constraints — What restrictions ensure data is correct?** - Defines rules that the data must follow to maintain accuracy, consistency, and validity. - Types of Integrity Constraints: - **Domain Integrity**: - Ensures that a column contains only valid values according to its defined domain/type. - Example: Age should be an integer and cannot be negative. - **Entity Integrity**: - Ensures that every row can be uniquely identified. - Example: A primary key cannot be NULL. - **Referential Integrity**: - Ensures that relationships between tables remain valid. - Example: A foreign key must refer to an existing primary key (or valid candidate key) in the referenced table, unless NULL is allowed. - **Key Constraints**: - Ensure that key values uniquely identify records. - Example: Two students cannot have the same Student_ID if it is a candidate/primary key.
+3. **Integrity Constraints — What restrictions ensure data is correct?** 
+- Defines rules that the data must follow to maintain accuracy, consistency, and validity. 
+- Types of Integrity Constraints: 
+    - **Domain Integrity**: 
+        - Ensures that a column contains only valid values according to its defined domain/type. 
+        - Example: Age should be an integer and cannot be negative. 
+    - **Entity Integrity**: 
+        - Ensures that every row can be uniquely identified. 
+        - Example: A primary key cannot be NULL. 
+    - **Referential Integrity**: 
+        - Ensures that relationships between tables remain valid. 
+        - Example: A foreign key must refer to an existing primary key (or valid candidate key) in the referenced table, unless NULL is allowed. 
+    - **Key Constraints**: 
+        - Ensure that key values uniquely identify records. 
+        - Example: Two students cannot have the same Student_ID if it is a candidate/primary key.
+        
     > A data model defines three main aspects: how data is stored, how data can be manipulated, and what integrity constraints must be followed to maintain correct and consistent data.
 
 [Go To Top](#content)
