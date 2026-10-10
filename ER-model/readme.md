@@ -1,3 +1,7 @@
+# Entity Relationship Model (ER Model)
+
+---
+
 # Content
 
 1. [Data Model](#data-model)
