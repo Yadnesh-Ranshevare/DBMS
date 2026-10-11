@@ -6,6 +6,8 @@
 2. [Relational Model vs ER Model](#relational-model-vs-er-model)
 3. [Relational Model is a Complete Model](#relational-model-is-a-complete-model)
 4. [Relationship In Relational Model](#relationship-in-relational-model)
+5. [Generalization / specialization In Relational Model](#generalization--specialization-in-relational-model)
+6. [Aggregation In Relational Model](#aggregation-in-relational-model)
 
 ---
 
@@ -311,4 +313,145 @@ Here, `Club_ID` can be `NULL`, allowing a student to exist without joining a clu
 [Go To Top](#content)
 
 ---
+### Generalization / specialization In Relational Model
 
+In DBMS, Generalization and Specialization are concepts used in an ER diagram to represent relationships between a general entity and its more specific types.
+
+Example:
+
+<img src="../extended-ER-model/img/Generalization-specialization.png" style="width:500px"/>
+
+here
+
+- `Person` -> generalize entity
+- `Student` / `Teacher` -> specialize entity
+
+### Three ways to convert this into Relational model
+
+there are 3 different ways to convert the generalize / specialize entity from ER model to relational model
+
+**Let's understand with an Example:**
+- Generalized entity: `PERSON(Person_ID, Name, Age)`
+- Specialized entities: `STUDENT(Course)` and `EMPLOYEE(Salary)`
+
+Assume the following data:
+
+| Person_ID | Name  | Age | Course | Salary |
+| --------- | ----- | --- | ------ | ------ |
+| 101       | Rahul | 20  | IT     | —      |
+| 102       | Priya | 25  | —      | 50000  |
+
+**Method 1: Superclass and Subclass Tables**
+- Create a separate table for the generalized entity.
+- Create separate tables for each specialized entity.
+- Use the primary key of the generalized entity as a foreign key in each specialized entity table. This foreign key also acts as the primary key of that table.
+- Example:
+    - PERSON
+        | Person_ID (PK) | Name  | Age |
+        | -------------- | ----- | --- |
+        | 101            | Rahul | 20  |
+        | 102            | Priya | 25  |
+    - STUDENT
+        | Person_ID (PK, FK) | Course |
+        | ------------------ | ------ |
+        | 101                | IT     |
+    - EMPLOYEE
+        | Person_ID (PK, FK) | Salary |
+        | ------------------ | ------ |
+        | 102                | 50000  |
+
+**Method 2: Subclass Tables Only**
+- Create separate tables for each specialized entity.
+- Include all attributes of the generalized entity along with the attributes specific to each specialized entity in their respective tables.
+- The primary key of the generalized entity is used as the primary key of each specialized entity table.
+- Example:
+    - STUDENT
+        | Person_ID (PK) | Name  | Age | Course |
+        | -------------- | ----- | --- | ------ |
+        | 101            | Rahul | 20  | IT     |
+
+    - EMPLOYEE
+        | Person_ID (PK) | Name  | Age | Salary |
+        | -------------- | ----- | --- | ------ |
+        | 102            | Priya | 25  | 50000  |
+
+**Method 3: Single Table**
+- Create a single table for the generalized entity.
+- Include the attributes of all specialized entities in the same table.
+- Add an additional attribute called a subtype discriminator to identify which specialized entity each record belongs to.
+- Attributes that do not apply to a particular specialized entity are left `NULL`.
+- Example:
+    | Person_ID (PK) | Name  | Age | Course | Salary | Person_Type |
+    | -------------- | ----- | --- | ------ | ------ | ----------- |
+    | 101            | Rahul | 20  | IT     | NULL   | Student     |
+    | 102            | Priya | 25  | NULL   | 50000  | Employee    |
+- in this example the `Person_Type` is known as subtype discriminator
+
+
+[Go To Top](#content)
+
+---
+# Aggregation In Relational Model
+Aggregation in DBMS is an abstraction concept in an ER model in which a relationship between entities is treated as a higher-level entity so that it can participate in another relationship.
+
+In simple words, aggregation is like treating a relationship and its participating entities as one unit so that it can participate in another relationship.
+
+### Example
+```
+                                           ┌──────────────────────────────────────────────────────────────────────┐
+  manager (Amit)  ────── Monitor ────────> │ Employee (Rahul) ───── WOrks_on ─────> Project (Website Development) │
+                                           └──────────────────────────────────────────────────────────────────────┘
+```
+here, Amit isn't just monitoring Rahul in general, and he isn't just monitoring the project. He's monitoring Rahul's work on that particular project.
+
+### Conversion to Relational Model
+
+To convert aggregation into a relational model, follow these steps:
+
+**1. Create separate tables for each entity.**
+
+- `EMPLOYEE(Emp_ID, Emp_Name)`
+- `PROJECT(Project_ID, Project_Name)`
+- `MANAGER(Manager_ID, Manager_Name)`
+
+**2. Create a separate table for the relationship being aggregated.**
+
+Create a `WORKS_ON` table containing the primary keys of the participating entities.
+
+- `WORKS_ON(Emp_ID, Project_ID, Hours)`
+
+Here, the combination of `Emp_ID` and `Project_ID` acts as the composite primary key. Both attributes are also foreign keys referencing their respective entity tables.
+
+**3. Create a separate table for the relationship involving the aggregation.**
+
+Since the manager monitors a particular employee's work on a particular project, create a `MONITORS` table.
+
+- `MONITORS(Manager_ID, Emp_ID, Project_ID)`
+
+Here:
+- `Manager_ID` is a foreign key referencing `MANAGER`.
+- The combination of `Emp_ID` and `Project_ID` is a composite foreign key referencing `WORKS_ON`.
+- Assuming a manager can monitor multiple employee-project assignments, the composite primary key is `(Manager_ID, Emp_ID, Project_ID)`.
+
+
+### Final Relational Schema
+
+| Table | Attributes |
+|---|---|
+| EMPLOYEE | Emp_ID (PK), Emp_Name |
+| PROJECT | Project_ID (PK), Project_Name |
+| MANAGER | Manager_ID (PK), Manager_Name |
+| WORKS_ON | Emp_ID (PK, FK), Project_ID (PK, FK), Hours |
+| MONITORS | Manager_ID (PK, FK), Emp_ID (FK), Project_ID (FK) |
+
+### Important Points
+
+- Aggregation itself does not require a special type of table in the relational model.
+- The relationship being aggregated is represented by a separate table.
+- The relationship involving the aggregation references the key of the aggregated relationship through a foreign key.
+- The composite key of the aggregated relationship must be preserved when referencing it from another relationship.
+- The exact primary key of the `MONITORS` table depends on the cardinality constraints given in the ER diagram.
+
+[Go To Top](#content)
+
+---
