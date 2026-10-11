@@ -2,7 +2,7 @@
 ---
 # Content
 1. [Introduction](#introduction)
-2. [Selection ($\sigma$)](#selection-)
+2. [Selection ( $\sigma$ )](#selection)
 
 ---
 
