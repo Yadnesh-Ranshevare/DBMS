@@ -116,9 +116,9 @@ you can chain as much as you want
 
 ### Another Representation
 
-because of this chaining property we can use logical AND symbol ($\land$) instead of chaining syntax 
+because of this chaining property we can use logical AND ($\land$) instead of chaining syntax 
 
-syntax:
+new syntax:
 
 $$\sigma_{p_1 \land p_2}(R) = \sigma_{p1}(\sigma_{p_2}(R))$$
 
@@ -129,7 +129,7 @@ $$\sigma_{p_1 \ AND\ p_2}(R) = \sigma_{p1}(\sigma_{p_2}(R))$$
 ### Selection operation are commutative:
 in selection operation the order of applying selection operations does not affect the final result.
 
-Example:
+That is:
 
 $$\sigma_{p_1}(\sigma_{p_2}(R)) = \sigma_{p_2}(\sigma_{p_1}(R))$$
 
