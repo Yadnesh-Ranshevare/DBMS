@@ -2,7 +2,7 @@
 ---
 # Content
 1. [Introduction](#introduction)
-2. [Selection ( $\sigma$ )](#selection)
+2. [Selection ](#selection)
 
 ---
 
@@ -49,7 +49,7 @@ Note that some textbooks classify assignment separately as an additional conveni
 
 ---
 
-# Selection ($\sigma$)
+# Selection
 - it os used to select the rows / tuples of a relation / table
 - Unary operator: input as well as output in same relation / table
 - Since the row don't have any name in the table so to select the rows we've to apply certain condition or predicate
