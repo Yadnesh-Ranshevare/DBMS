@@ -223,9 +223,8 @@ continue with previous example Suppose we create these relationships:
 ```
 
                    ┌───── Monitor ───── Employee (Rahul) ───────────────────┐
-
-Manager (Amit) ────| WOrks_on
-└───── Monitor ───── Project (Website Development) ──────┘
+Manager (Amit) ────|                                                    Works_on
+                   └───── Monitor ───── Project (Website Development) ──────┘
 
 ```
 You have:
