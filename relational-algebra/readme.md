@@ -61,6 +61,7 @@ Note that some textbooks classify assignment separately as an additional conveni
 $$\sigma_p(R)$$
 
 where:
+- $\sigma$ = selection operator
 - p = condition
 - R = relation / table
 
