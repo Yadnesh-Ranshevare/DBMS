@@ -2,13 +2,15 @@
 ---
 # Content
 1. [Introduction](#introduction)
-2. [Selection Operator](#selection-operator)
-3. [Projection Operator](#projection-operator)
-4. [Union Operator](#union-operator)
-5. [Set Difference Operator](#set-difference-operator)
-6. [cartesian Product Operator](#cartesian-product-operator)
-7. [Rename Operator](#rename-operator)
-8. [Intersection Operation](#intersection-operation)
+2. fundamental Operator:
+    1. [Selection Operator](#selection-operator)
+    2. [Projection Operator](#projection-operator)
+    3. [Union Operator](#union-operator)
+    4. [Set Difference Operator](#set-difference-operator)
+    5. [cartesian Product Operator](#cartesian-product-operator)
+    6. [Rename Operator](#rename-operator)
+3. Derived Operator:
+    1. [Intersection Operation](#intersection-operation)
 
 ---
 
