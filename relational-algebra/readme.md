@@ -6,6 +6,9 @@
 3. [Projection Operator](#projection-operator)
 4. [Union Operator](#union-operator)
 5. [Set Difference Operator](#set-difference-operator)
+6. [cartesian Product Operator](#cartesian-product-operator)
+7. [Rename Operator](#rename-operator)
+8. [Intersection Operation](#intersection-operation)
 
 ---
 
@@ -31,8 +34,8 @@ there are two main type of operator in relational algebra that is:
     | 2       | [Projection](#projection-operator)        | ($\pi$)    | Selects specific columns from a relation.                         |
     | 3       | [Union](#union-operator)             | ($\cup$)   | Combines tuples from two compatible relations.                    |
     | 4       | [Set Difference](#set-difference-operator)    | ($-$)      | Returns tuples present in one relation but not the other.         |
-    | 5       | Cartesian Product | ($\times$) | Combines every tuple of one relation with every tuple of another. |
-    | 6       | Rename            | ($\rho$)   | Renames a relation or its attributes.                             |
+    | 5       | [Cartesian Product](#cartesian-product-operator) | ($\times$) | Combines every tuple of one relation with every tuple of another. |
+    | 6       | [Rename](#rename-operator)            | ($\rho$)   | Renames a relation or its attributes.                             |
 
 2. **Derived Operators**
 
@@ -40,7 +43,7 @@ there are two main type of operator in relational algebra that is:
 
     | Sr. No. | Operator     | Symbol           | Purpose                                                                        |
     | ------- | ------------ | ---------------- | ------------------------------------------------------------------------------ |
-    | 1       | Intersection | ($\cap$)       | Returns tuples common to both relations.                                       |
+    | 1       | [Intersection](#intersection-operation) | ($\cap$)       | Returns tuples common to both relations.                                       |
     | 2       | Join         | ($\bowtie$)    | Combines related tuples from two relations based on a condition.               |
     | 3       | Division     | ($\div$)       | Finds tuples associated with all tuples in another relation.                   |
     | 4       | Assignment   | ($\leftarrow$) | Assigns the result of a relational algebra expression to a temporary relation. |
@@ -700,6 +703,286 @@ This is because there are no tuples available in the empty relation to form comb
 | Cartesian Product ($\times$) | Combines every tuple of the first relation with every tuple of the second |
 
 Remember: Cartesian product means every row of $R$ paired with every row of $S$. If one table has 4 rows and the other has 5 rows, the result has $4\times5=20$ tuples.
+
+
+[Go To Top](#content)
+
+---
+# Rename Operator
+
+- It is used to rename a relation / table or its attributes (columns) in relational algebra.
+- It is a unary operator, meaning it takes one relation as input and produces one relation as output.
+- It changes the name of a relation, its attributes, or both without changing the actual data stored in the relation.
+- It is useful when we want to give temporary names to relations, especially when performing complex operations such as Cartesian product and joins.
+- The rename operator does not add, remove, or modify tuples.
+
+### Syntax
+
+1. Rename a relation:
+
+$$\rho_{NewName}(R)$$
+
+2\. Rename attributes:
+
+$$\rho_{(A_1,A_2,\ldots,A_n)}(R)$$
+
+3\. Rename both relation and attributes:
+
+$$\rho_{NewName(A_1,A_2,\ldots,A_n)}(R)$$
+
+where:
+
+- $\rho$ = rename operator
+- $R$ = existing relation / table
+- $NewName$ = new relation name
+- $A_1,A_2,\ldots,A_n$ = new attribute names
+
+### Example 1: Rename a relation
+
+Input relation: `Student`
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+
+Operation:
+
+$$\rho_{Learner}(Student)$$
+
+Output relation: `Learner`
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+
+Explanation:
+
+- The relation name changes from `Student` to `Learner`.
+- All attributes and tuples remain unchanged.
+- Only the relation's name is changed.
+
+### Example 2: Rename attributes
+
+Let's use the same `Student` relation.
+
+Operation:
+
+$$\rho_{(StudentId,StudentName,Year)}(Student)$$
+
+Output:
+
+| StudentId | StudentName | Year     |
+| --------- | ----------- | -------- |
+| 1123      | John        | Junior   |
+| 1234      | Lee         | Senior   |
+| 5556      | Mary        | Freshman |
+
+Explanation:
+
+- `Id` is renamed to `StudentId`.
+- `Name` is renamed to `StudentName`.
+- `Status` is renamed to `Year`.
+- The actual values in the table remain unchanged.
+
+### Example 3: Rename both relation and attributes
+
+Operation:
+
+$$\rho_{Learner(StudentId,StudentName,Year)}(Student)$$
+
+Output relation: `Learner`
+
+| StudentId | StudentName | Year     |
+| --------- | ----------- | -------- |
+| 1123      | John        | Junior   |
+| 1234      | Lee         | Senior   |
+| 5556      | Mary        | Freshman |
+
+Here, both the relation name and its attribute names are changed. The data remains the same.
+
+### Why do we need the rename operator?
+
+The rename operator is especially useful when working with two copies of the same relation.
+
+For example, suppose we have an `Employee` relation containing `EmployeeId`, `Name`, and `ManagerId`. If we need to compare employees with their managers, we may use the same relation twice in a Cartesian product.
+
+We can rename the two copies as:
+
+$$\rho_{E1}(Employee)$$
+
+$$\rho_{E2}(Employee)$$
+
+Now, `E1` and `E2` can be referenced separately in subsequent operations, helping us distinguish employee attributes from manager attributes.
+
+### Important properties
+
+- Data remains unchanged: Rename changes names, not tuple values.
+- Unary operator: It operates on one relation.
+- No duplicate removal: Rename itself does not eliminate or create duplicate tuples.
+- Reversible in principle: If the original names are known and there are no naming conflicts, the relation can be renamed back to its original names.
+
+
+
+Remember: ($\rho$) means rename. It changes the names of relations or attributes, not the underlying data.
+
+
+
+[Go To Top](#content)
+
+---
+# Intersection Operation
+
+- It is used to retrieve the rows / tuples that are common to both relations / tables.
+- It is a binary operator, meaning it takes two relations as input and produces one relation as output.
+- The intersection operation returns only those tuples that exist in both relations.
+- Duplicate rows are eliminated because relational algebra treats relations as sets.
+- The two relations must be union-compatible to perform the intersection operation.
+
+### Syntax
+
+$R \cap S$
+
+where:
+
+- $\cap$ = intersection operator
+- $R$ = first relation / table
+- $S$ = second relation / table
+
+### Example
+
+Input `Student1` table:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+| 9876 | Bart | Junior   |
+
+Input `Student2` table:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 5556 | Mary | Freshman |
+| 9876 | Bart | Junior   |
+| 2222 | Sam  | Senior   |
+
+Operation:
+
+$$Student1 \cap Student2$$
+
+Output:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 5556 | Mary | Freshman |
+| 9876 | Bart | Junior   |
+
+### Explanation
+
+- First, consider all tuples present in `Student1`.
+- Check whether each tuple also exists in `Student2`.
+- If a tuple exists in both relations, include it in the output.
+- If a tuple exists in only one relation, exclude it.
+- Therefore, only Mary and Bart appear in the output because their tuples are present in both relations.
+
+### Intersection derived from Fundamental operators
+
+- Intersection is a **derived operator** in relational algebra because it can be constructed using basic operators, specifically **set difference**.
+- It is derived using the following expression:
+
+$$R \cap S = R - (R - S)$$
+
+**Derivation:**
+
+1. **First operation:** Calculate \(R-S\). This returns all tuples that exist in \(R\) but not in \(S\).
+2. **Second operation:** Calculate \(R-(R-S)\). Subtract the tuples obtained in the first operation from \(R\).
+3. **Final result:** Only tuples that exist in both \(R\) and \(S\) remain. Therefore, the result is \(R \cap S\).
+
+**Example:**
+
+Let:
+
+R=\{1,2,3,4\}
+
+S=\{3,4,5,6\}
+
+**Step 1: Apply set difference**
+
+$$R-S=\{1,2\}$$
+
+**Step 2: Subtract the result from \(R\)**
+
+$$R-(R-S)=\{1,2,3,4\}-\{1,2\}$$
+
+$$=\{3,4\}$$
+
+**Final result:**
+
+$$R \cap S=\{3,4\}$$
+
+**Conclusion:** The intersection operator is derived from the basic set difference operator. Therefore, it is not necessary to define intersection as a separate basic operator in relational algebra because its functionality can be achieved using set difference.
+
+### Intersection is commutative
+
+The order of the relations does not affect the final result.
+
+$$R \cap S = S \cap R$$
+
+For example:
+
+$$Student1 \cap Student2 = Student2 \cap Student1$$
+
+Both operations produce the same tuples.
+
+### Intersection is associative
+
+When combining three relations, the grouping does not affect the final result.
+
+$$(R \cap S)\cap T = R\cap(S\cap T)$$
+
+Both expressions return the tuples common to all three relations.
+
+### Intersection with itself
+
+Taking the intersection of a relation with itself produces the same relation.
+
+$$R\cap R=R$$
+
+This is because every tuple in $R$ is also present in $R$.
+
+### Intersection with an empty relation
+
+If one relation is empty, the intersection is empty.
+
+$$R\cap\varnothing=\varnothing$$
+
+This is because no tuple can be common to a relation and an empty relation.
+
+### Union compatibility
+
+Just like union and set difference, intersection requires both relations to have:
+
+- The same number of attributes.
+- Corresponding attributes with compatible domains / data types.
+
+### Intersection using set difference
+
+Intersection can also be expressed using set difference:
+
+$$R\cap S=R-(R-S)$$
+
+Explanation:
+
+- $R-S$ returns tuples present in $R$ but absent from $S$.
+- Subtracting those tuples from $R$ leaves only the tuples common to both relations.
+
+
+Remember: Intersection means keep only the tuples that exist in both relations.
 
 
 [Go To Top](#content)
