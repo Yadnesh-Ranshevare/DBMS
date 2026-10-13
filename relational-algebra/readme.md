@@ -3,14 +3,14 @@
 # Content
 1. [Introduction](#introduction)
 2. fundamental Operator:
-    1. [Selection Operator](#selection-operator)
-    2. [Projection Operator](#projection-operator)
-    3. [Union Operator](#union-operator)
-    4. [Set Difference Operator](#set-difference-operator)
-    5. [cartesian Product Operator](#cartesian-product-operator)
-    6. [Rename Operator](#rename-operator)
+    1. [Selection Operator ($\sigma$)](#selection-operator)
+    2. [Projection Operator ($\pi$)](#projection-operator)
+    3. [Union Operator ($\cup$)](#union-operator)
+    4. [Set Difference Operator ($-$)](#set-difference-operator)
+    5. [cartesian Product Operator ($\times$)](#cartesian-product-operator)
+    6. [Rename Operator ($\rho$)](#rename-operator)
 3. Derived Operator:
-    1. [Intersection Operation](#intersection-operation)
+    1. [Intersection Operation ($\cap$)](#intersection-operation)
 
 ---
 
