@@ -854,6 +854,13 @@ where:
 - $R$ = first relation / table
 - $S$ = second relation / table
 
+### Must Have compatibility
+
+Just like union and set difference, intersection requires both relations to have:
+
+- The same number of attributes.
+- Corresponding attributes with compatible domains / data types.
+
 ### Example
 
 Input `Student1` table:
@@ -965,12 +972,7 @@ $$R\cap\varnothing=\varnothing$$
 
 This is because no tuple can be common to a relation and an empty relation.
 
-### Union compatibility
 
-Just like union and set difference, intersection requires both relations to have:
-
-- The same number of attributes.
-- Corresponding attributes with compatible domains / data types.
 
 ### Intersection using set difference
 
@@ -990,3 +992,248 @@ Remember: Intersection means keep only the tuples that exist in both relations.
 [Go To Top](#content)
 
 ---
+# Join Operation 
+
+- It is used to combine related rows / tuples from two relations / tables based on a specified condition.
+- It is a binary operator, meaning it takes two relations as input and produces one relation as output.
+- The join operation combines tuples from both relations when they satisfy the join condition.
+- It is similar to a Cartesian product followed by a selection operation.
+- Unlike a Cartesian product, which combines every tuple with every other tuple, a join returns only the combinations that satisfy the specified condition (for an inner join).
+
+### Syntax
+
+$$R \bowtie_{p} S$$
+
+where:
+
+- $\bowtie$ = join operator
+- $R$ = first relation / table
+- $S$ = second relation / table
+- $p$ = join condition / predicate
+
+### Example
+
+Input `Student` table:
+
+| Student_ID | Name | Dept_ID |
+| ---------- | ---- | ------- |
+| 101        | John | 10      |
+| 102        | Lee  | 20      |
+| 103        | Mary | 30      |
+| 104        | Bart | 10      |
+
+Input `Department` table:
+
+| Dept_ID | Dept_Name  |
+| ------- | ---------- |
+| 10      | IT         |
+| 20      | Computer   |
+| 40      | Mechanical |
+
+Operation:
+
+$$Student \bowtie_{Student.Dept\\\_ID=Department.Dept\\\_ID} Department$$
+
+Output:
+
+| Student_ID | Name | Student.Dept_ID | Dept_Name |
+| ---------- | ---- | --------------- | --------- |
+| 101        | John | 10              | IT        |
+| 102        | Lee  | 20              | Computer  |
+| 104        | Bart | 10              | IT        |
+
+### Explanation
+
+- First, compare the `Dept_ID` values in both relations.
+- If the `Dept_ID` values match, combine the corresponding tuples.
+- John and Bart belong to department `10`, so they are matched with IT.
+- Lee belongs to department `20`, so Lee is matched with Computer.
+- Mary has department `30`, which does not exist in the `Department` table. Therefore, Mary is excluded from this inner join.
+- The department with ID `40` also has no matching student, so it is excluded.
+
+### Join is equivalent to Cartesian product followed by selection
+
+A join can be represented using two relational algebra operations: Cartesian product and selection.
+
+$$R \bowtie_p S = \sigma_p(R \times S)$$
+
+Explanation:
+
+1. $R \times S$ combines every tuple from ($R$) with every tuple from ($S$).
+2. $\sigma_p$ selects only those combined tuples that satisfy condition ($p$).
+3. The resulting relation is the join result.
+
+For example:
+
+$$Student \bowtie_{Student.Dept\\\_ID=Department.Dept\\\_ID} Department$$
+
+is equivalent to:
+
+$$\sigma_{Student.Dept\\\_ID=Department.Dept\\\_ID} (Student \times Department)$$
+
+## Types of join operations
+
+there are two main type of join that is.,
+1. Inner Join
+2. Outer join
+
+### Inner Join
+An inner join combines rows (tuples) from two relations (tables) based on a specified condition. It returns only the rows that satisfy the join condition in both relations.
+
+ 1. **Theta Join $(\bowtie_\theta)$**
+
+    - It performs a join using a general comparison condition.
+    - The condition can use operators such as $=$, $\neq$, $<$, $>$, $\leq$, and $\geq$.
+
+    Example:
+
+    $$R \bowtie_{R.A>S.B} S$$
+
+    This combines tuples where the value of attribute `A` in $R$ is greater than the value of attribute `B` in $S$.
+
+2. **Equi Join**
+
+    - It is a type of theta join that uses only the equality operator $(=)$.
+    - Both matching attributes are generally retained in the result.
+
+    Example:
+
+    $$Student \bowtie_{Student.Dept\\\_ID=Department.Dept\\\_ID} Department$$
+
+    Here, the join condition checks whether the department IDs are equal.
+
+3. **Natural Join $(\bowtie)$**
+
+    - It automatically joins two relations using attributes that have the same name and compatible domains.
+    - The common attribute is included only once in the output.
+    - No explicit join condition is required.
+
+    Example:
+
+    $$Student \bowtie Department$$
+
+    Since both relations contain `Dept_ID`, the natural join matches rows using that attribute.
+
+    Output:
+
+    | Student_ID | Name | Dept_ID | Dept_Name |
+    | ---------- | ---- | ------- | --------- |
+    | 101        | John | 10      | IT        |
+    | 102        | Lee  | 20      | Computer  |
+    | 104        | Bart | 10      | IT        |
+
+    Notice that `Dept_ID` appears only once in the output.
+
+### Outer Join
+
+Outer joins preserve unmatched tuples instead of discarding all of them. In extended relational algebra, there are three common types.
+
+1. **Left Outer Join $(⟕)$**: Keeps all tuples from the left relation. Unmatched right-side attributes are filled with `NULL`.
+
+    **Example:**
+
+    $$Student\ ⟕\ Department$$
+
+
+    | Student_ID | Name | Dept_ID | Dept_Name |
+    |---|---|---|---|
+    | 101 | John | 10 | IT |
+    | 102 | Lee | 20 | Computer |
+    | 103 | Mary | 30 | NULL |
+    | 104 | Bart | 10 | IT |
+
+2. **Right Outer Join $(⟖)$**: Keeps all tuples from the right relation. Unmatched left-side attributes are filled with `NULL`.
+
+    **Example:**
+
+    $$Student\ ⟖\ Department$$
+
+    | Student_ID | Name | Dept_ID | Dept_Name |
+    |---|---|---|---|
+    | 101 | John | 10 | IT |
+    | 102 | Lee | 20 | Computer |
+    | 104 | Bart | 10 | IT |
+    | NULL | NULL | 40 | Mechanical |
+
+
+3. **Full Outer Join $(⟗)$**: Keeps all tuples from both relations, filling missing attributes with `NULL` where there is no match.
+
+    **Example:**
+
+    $$Student\ ⟗\ Department$$
+
+
+    | Student_ID | Name | Dept_ID | Dept_Name |
+    |---|---|---|---|
+    | 101 | John | 10 | IT |
+    | 102 | Lee | 20 | Computer |
+    | 103 | Mary | 30 | NULL |
+    | 104 | Bart | 10 | IT |
+    | NULL | NULL | 40 | Mechanical |
+
+These are commonly taught alongside relational algebra joins, although outer joins are part of extended relational algebra, rather than the basic relational algebra operators.
+
+
+### What happens if no matching attribute is present?
+
+If the two relations have no common attribute names, a join behaves like a Cartesian product because there are no common attributes to match.
+
+Example:
+
+`Student` table:
+
+| Student_ID | Name |
+| ---------- | ---- |
+| 101        | John |
+| 102        | Lee  |
+
+`Course` table:
+
+| Course_ID | Course_Name |
+| --------- | ----------- |
+| C1        | DBMS        |
+| C2        | Java        |
+
+Since the two tables have no common attribute names, their natural join produces the Cartesian product.
+
+$$Student \bowtie Course $$
+
+Output:
+
+| Student_ID | Name | Course_ID | Course_Name |
+| ---------- | ---- | --------- | ----------- |
+| 101        | John | C1        | DBMS        |
+| 101        | John | C2        | Java        |
+| 102        | Lee  | C1        | DBMS        |
+| 102        | Lee  | C2        | Java        |
+
+Important: If no common attribute exists, a natural join does not automatically return an empty relation. It combines every tuple from both relations.
+
+## Important properties
+
+### Join is not generally commutative in its schema
+
+$$R\bowtie_p S \neq S\bowtie_p R$$
+
+The tuple matching may be equivalent when the condition is appropriately reversed, but the output attribute order can differ. For a simple equijoin, the relations can often be swapped without changing the matched data, provided the condition is adjusted accordingly.
+
+### Join can be chained
+
+You can join more than two relations to retrieve related information from multiple tables.
+
+For example:
+
+$$(Student\bowtie Department)\bowtie College$$
+
+This can combine student, department, and college information, provided the join conditions or common attributes are appropriate.
+
+
+
+
+[Go To Top](#content)
+
+---
+
+
+
+
