@@ -3,14 +3,15 @@
 # Content
 1. [Introduction](#introduction)
 2. fundamental Operator:
-    1. [Selection Operator ($\sigma$)](#selection-operator)
-    2. [Projection Operator ($\pi$)](#projection-operator)
-    3. [Union Operator ($\cup$)](#union-operator)
-    4. [Set Difference Operator ($-$)](#set-difference-operator)
-    5. [cartesian Product Operator ($\times$)](#cartesian-product-operator)
-    6. [Rename Operator ($\rho$)](#rename-operator)
+    1. [Selection Operator $(\sigma)$](#selection-operator)
+    2. [Projection Operator $(\pi)$](#projection-operator)
+    3. [Union Operator $(\cup)$](#union-operator)
+    4. [Set Difference Operator $(-)$](#set-difference-operator)
+    5. [cartesian Product Operator $(\times)$](#cartesian-product-operator)
+    6. [Rename Operator $(\rho)$](#rename-operator)
 3. Derived Operator:
-    1. [Intersection Operation ($\cap$)](#intersection-operation)
+    1. [Intersection Operation $(\cap)$](#intersection-operation)
+    2. [Join Operation $(\bowtie)$](#join-operation)
 
 ---
 
@@ -46,7 +47,7 @@ there are two main type of operator in relational algebra that is:
     | Sr. No. | Operator     | Symbol           | Purpose                                                                        |
     | ------- | ------------ | ---------------- | ------------------------------------------------------------------------------ |
     | 1       | [Intersection](#intersection-operation) | ($\cap$)       | Returns tuples common to both relations.                                       |
-    | 2       | Join         | ($\bowtie$)    | Combines related tuples from two relations based on a condition.               |
+    | 2       | [Join](#join-operation)         | ($\bowtie$)    | Combines related tuples from two relations based on a condition.               |
     | 3       | Division     | ($\div$)       | Finds tuples associated with all tuples in another relation.                   |
     | 4       | Assignment   | ($\leftarrow$) | Assigns the result of a relational algebra expression to a temporary relation. |
 
