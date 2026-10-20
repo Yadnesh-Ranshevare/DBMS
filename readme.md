@@ -9,6 +9,7 @@
 4. [Formulating an ER model](./formulate/readme.md)
 5. [Relational Model](./relational-model/readme.md)
 6. [Relational Algebra](./relational-algebra/readme.md)
+7. [Relational Calculus](./Relational-Calculus/readme.md)
 
 
 ----
