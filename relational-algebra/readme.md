@@ -12,6 +12,9 @@
 3. Derived Operator:
     1. [Intersection Operation](#intersection-operation) $(\cap)$
     2. [Join Operation](#join-operation) $(\bowtie)$
+    3. [Division Operation](#division-operation) $(\div)$
+    4. [Assignment Operation](#assignment-operation)
+4. [Modification of Relations Using Relational Algebra](#modification-of-relations-using-relational-algebra)
 
 ---
 
@@ -48,8 +51,8 @@ there are two main type of operator in relational algebra that is:
     | ------- | ------------ | ---------------- | ------------------------------------------------------------------------------ |
     | 1       | [Intersection](#intersection-operation) | ($\cap$)       | Returns tuples common to both relations.                                       |
     | 2       | [Join](#join-operation)         | ($\bowtie$)    | Combines related tuples from two relations based on a condition.               |
-    | 3       | Division     | ($\div$)       | Finds tuples associated with all tuples in another relation.                   |
-    | 4       | Assignment   | ($\leftarrow$) | Assigns the result of a relational algebra expression to a temporary relation. |
+    | 3       | [Division](#division-operation)     | ($\div$)       | Finds tuples associated with all tuples in another relation.                   |
+    | 4       | [Assignment](#assignment-operation)   | ($\leftarrow$) | Assigns the result of a relational algebra expression to a temporary relation. |
 
 
 Note that some textbooks classify assignment separately as an additional convenience operator rather than a derived operator. Follow the classification prescribed by your syllabus or professor.
@@ -1230,6 +1233,390 @@ This can combine student, department, and college information, provided the join
 
 
 
+
+[Go To Top](#content)
+
+---
+# Division Operation
+
+- It is used to find tuples in one relation that are associated with all tuples in another relation.
+- It is a binary operator, meaning it takes two relations as input and produces one relation as output.
+- It is mainly used to solve queries involving the word "all".
+- It returns the values from the first relation that are associated with every value in the second relation.
+- The division operation is useful for queries such as:
+  - Find students who enrolled in all required courses.
+  - Find employees who work on all projects.
+  - Find suppliers who supply all required products.
+
+### Syntax
+
+$$R \div S$$
+
+where:
+
+- $\div$ = division operator
+- $R$ = dividend relation, containing the tuples and their associations
+- $S$ = divisor relation, containing the values that must all be matched
+
+Important: If $R(A,B)$ and $S(B)$, then $R\div S$ returns the values of attribute $A$ that are associated with every value of $B$ in $S$.
+
+### Example
+
+Suppose we want to find students who have completed all required courses.
+
+Input `Enrollment` table (R):
+
+| Student | Course |
+| ------- | ------ |
+| John    | DBMS   |
+| John    | Java   |
+| John    | Python |
+| Lee     | DBMS   |
+| Lee     | Java   |
+| Mary    | DBMS   |
+| Mary    | Java   |
+| Mary    | Python |
+| Bart    | DBMS   |
+
+Input `RequiredCourse` table (S):
+
+| Course |
+| ------ |
+| DBMS   |
+| Java   |
+| Python |
+
+Operation:
+
+$$Enrollment \div RequiredCourse$$
+
+Output:
+
+| Student |
+| ------- |
+| John    |
+| Mary    |
+
+### Explanation
+
+- John: Has DBMS, Java, and Python. Therefore, John qualifies.
+- Lee: Has DBMS and Java but not Python. Therefore, Lee does not qualify.
+- Mary: Has DBMS, Java, and Python. Therefore, Mary qualifies.
+- Bart: Has only DBMS. Therefore, Bart does not qualify.
+
+Only John and Mary are associated with all courses listed in `RequiredCourse`.
+
+### How division works
+
+1. Identify the attributes common to the two relations. In this example, it is `Course`.
+2. Find the distinct values of the remaining attribute in `Enrollment`, which is `Student`.
+3. For each student, check whether they are associated with every course in `RequiredCourse`.
+4. Return only the students who satisfy all the required matches.
+
+### Another representation using set difference
+
+Division can also be understood as eliminating candidates that are missing at least one required association.
+
+For $R(A,B)$ and $S(B)$, the result contains those $A$ values associated with every $B$ value in $S$.
+
+Conceptually:
+
+$$R\div S = a\mid \forall b\in S,\ (a,b)\in R$$
+
+Here, $\forall$ means "for all".
+
+### Important properties
+
+- Attribute requirement: The attributes of the divisor relation must be a subset of the attributes of the dividend relation, with compatible domains.
+- Output attributes: The result contains the attributes of $R$ that are not present in $S$.
+- Empty divisor: If $S$ is empty, the result contains every distinct value of the output attributes from $R$, under standard relational algebra semantics.
+- No matching candidates: If no candidate satisfies all required associations, the result is an empty relation.
+
+
+
+[Go To Top](#content)
+
+---
+
+# Assignment Operation
+
+- It is used to assign the result of a relational algebra operation to a temporary relation / variable.
+- It allows us to store the result of an operation and use it in subsequent operations.
+- It is a procedural convenience operation, rather than a basic relational algebra operator.
+- It helps simplify complex relational algebra expressions by breaking them into smaller, understandable steps.
+- The assignment operation does not modify the original input relations; it stores the result under a new relation name.
+
+### Syntax
+
+$$R \leftarrow \text{Expression}$$
+
+where:
+
+- $\leftarrow$ = assignment operator
+- $R$ = name of the relation / variable in which the result is stored
+- Expression = relational algebra operation whose result is assigned to $R$
+
+### Example
+
+Consider the `Student` table:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+| 9876 | Bart | Junior   |
+
+Operation:
+
+$$JuniorStudents \leftarrow \sigma_{Status='Junior'}(Student)$$
+
+Output relation: `JuniorStudents`
+
+| Id   | Name | Status |
+| ---- | ---- | ------ |
+| 1123 | John | Junior |
+| 9876 | Bart | Junior |
+
+### Explanation
+
+- First, the selection operation retrieves students whose status is `Junior`.
+- The resulting relation is assigned to the temporary relation named `JuniorStudents`.
+- We can now use `JuniorStudents` in subsequent relational algebra operations.
+- The original `Student` relation remains unchanged.
+
+### Assignment with multiple operations
+
+Assignment is particularly useful when a query requires multiple steps.
+
+Step 1: Select junior students.
+
+$$R_1 \leftarrow \sigma_{Status='Junior'}(Student)$$
+
+Step 2: Select only their names.
+
+$$R_2 \leftarrow \pi_{Name}(R_1)$$
+
+Output relation: $R_2$
+
+| Name |
+| ---- |
+| John |
+| Bart |
+
+### Explanation
+
+- $R_1$ stores all tuples of students whose status is `Junior`.
+- $R_2$ stores only the `Name` attribute from $R_1$.
+- Each assignment stores the result for use in the next step.
+
+The same result can be obtained with a single expression:
+
+$$\pi_{Name}(\sigma_{Status='Junior'}(Student))$$
+
+Assignment simply makes the intermediate steps easier to understand.
+
+
+
+### Assignment Can Modify an Existing Relation Variable
+Assignment can replace the current value of an existing relation variable by assigning a new result to the same name.
+
+Example:
+$$R \leftarrow R-E$$
+
+- $R-E$ finds the tuples present in $R$ but not in $E$.
+- The result replaces the current value of $R$.
+- This changes the working relation $R$, but does not automatically modify a permanent database table.
+
+
+### Important properties
+
+- Temporary relation: The assigned relation name is used to refer to the result in subsequent expressions.
+- No change to original data: The input relations remain unchanged.
+- Can store any relational algebra result: For example, selection, projection, union, join, or Cartesian product.
+- Can simplify complex queries: Large expressions can be divided into smaller steps.
+- Assignment direction matters: The expression on the right is evaluated, and its result is assigned to the relation on the left.
+
+
+
+[Go To Top](#content)
+
+---
+
+
+# Modification of Relations Using Relational Algebra
+
+Modification of relations means changing the data stored in a relation. The three main operations are:
+
+1. Insert – Add new tuples to a relation.
+2. Delete – Remove existing tuples from a relation.
+3. Update – Modify attribute values of existing tuples.
+
+These operations can be represented using relational algebra expressions and the assignment operator $\leftarrow$.
+
+Consider the `Student` relation:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+
+## 1. Insert Operation
+
+- The insert operation adds a new tuple to an existing relation.
+- The new tuple must follow the relation's schema, including the correct attributes and data types.
+- In relational algebra, insertion can be represented using union $(\cup)$ and assignment $(\leftarrow)$.
+
+### Syntax
+
+$$R \leftarrow R \cup E$$
+
+Where:
+
+- $R$ = existing relation
+- $E$ = relation containing the new tuple
+- $\cup$ = union operation
+- $\leftarrow$ = assignment operator
+
+### Example
+
+Insert a new student: `(9876, Bart, Junior)`.
+
+Step 1: Create a relation containing the new tuple.
+
+| Id   | Name | Status |
+| ---- | ---- | ------ |
+| 9876 | Bart | Junior |
+
+Step 2: Add the tuple to the existing relation.
+
+$$Student \leftarrow Student \cup NewStudent$$
+
+Output:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+| 9876 | Bart | Junior   |
+
+Explanation: The union operation combines the tuples from `Student` and `NewStudent`. Assignment stores the resulting relation back in `Student`.
+
+## 2. Delete Operation
+
+- The delete operation removes existing tuples from a relation.
+- In relational algebra, deletion can be performed using selection $(\sigma)$, set difference $(-)$, and assignment $(\leftarrow)$.
+- Selection identifies the tuples to be deleted, while set difference removes them from the original relation.
+
+### Syntax
+
+$$Student \leftarrow Student - E$$
+
+Where:
+
+- `Student` = existing relation
+- $E$ = relation containing the tuples to be deleted
+- $-$ = set difference operator
+
+### Example
+
+Delete the student whose `Id = 1234`.
+
+Step 1: Select the tuple to be deleted.
+
+$$E \leftarrow \sigma_{Id=1234}(Student)$$
+
+Selected tuple:
+
+| Id   | Name | Status |
+| ---- | ---- | ------ |
+| 1234 | Lee  | Senior |
+
+Step 2: Remove the selected tuple from the relation.
+
+$$Student \leftarrow Student-E$$
+
+Output:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Junior   |
+| 5556 | Mary | Freshman |
+
+Explanation: Selection identifies Lee's tuple, and set difference removes that tuple from `Student`. The remaining tuples are retained.
+
+## 3. Update Operation
+
+- The update operation modifies one or more attribute values of existing tuples.
+- Basic relational algebra does not provide a separate primitive update operator.
+- An update can be represented using selection, projection or extended relational algebra, union, set difference, and assignment.
+- The general approach is to remove the old tuple and insert the modified tuple.
+
+### General Syntax
+
+$$R \leftarrow (R-E)\cup E'$$
+
+Where:
+
+- $R$ = existing relation
+- $E$ = relation containing the old tuple(s)
+- $E'$ = relation containing the updated tuple(s)
+- $R-E$ removes the old tuple(s).
+- $\cup$ adds the updated tuple(s).
+
+### Example
+
+Update John's status from `Junior` to `Senior`.
+
+Step 1: Select John's existing tuple.
+
+$$E \leftarrow \sigma\_{Id=1123}(Student)$$
+
+Selected tuple:
+
+| Id   | Name | Status |
+| ---- | ---- | ------ |
+| 1123 | John | Junior |
+
+Step 2: Create the updated tuple.
+
+| Id   | Name | Status |
+| ---- | ---- | ------ |
+| 1123 | John | Senior |
+
+Call this relation `E_New`.
+
+Step 3: Remove the old tuple and add the updated tuple.
+
+$$Student \leftarrow (Student-E)\cup E\_{New}$$
+
+Output:
+
+| Id   | Name | Status   |
+| ---- | ---- | -------- |
+| 1123 | John | Senior   |
+| 1234 | Lee  | Senior   |
+| 5556 | Mary | Freshman |
+
+Explanation: The old tuple containing John's `Junior` status is removed, and the new tuple containing his `Senior` status is inserted.
+
+## Comparison of Modification Operations
+
+| Operation | Purpose                | Relational algebra used                                                |
+| --------- | ---------------------- | ---------------------------------------------------------------------- |
+| Insert    | Add new tuples         | Union $(\cup)$                                                     |
+| Delete    | Remove existing tuples | Selection $(\sigma)$, set difference $(-)$                     |
+| Update    | Modify existing values | Selection $(\sigma)$, set difference $(-)$, union $(\cup)$ |
+
+### Important Points
+
+- Relations must be union-compatible when using union or set difference.
+- Under set-based relational algebra, a relation does not contain duplicate tuples.
+- Assignment stores the modified result under the relation name on the left.
+- These expressions describe relational algebra operations; actual database changes require an implementation that executes the corresponding modifications.
+- Remember: Insert adds tuples, delete removes tuples, and update replaces old tuples with modified ones.
 
 [Go To Top](#content)
 
