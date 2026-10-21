@@ -8,8 +8,9 @@
 3. [Extended Entity Relationship Model (EER Model)](./extended-ER-model/readme.md)
 4. [Formulating an ER model](./formulate/readme.md)
 5. [Relational Model](./relational-model/readme.md)
-6. [Relational Algebra](./relational-algebra/readme.md)
-7. [Relational Calculus](./Relational-Calculus/readme.md)
+6. [Normalization](./Normalization/readme.md)
+7. [Relational Algebra](./relational-algebra/readme.md)
+8. [Relational Calculus](./Relational-Calculus/readme.md)
 
 
 ----
@@ -18,3 +19,4 @@
 - [Mahesh Huddar](https://www.youtube.com/@MaheshHuddar): types of relationships (https://www.youtube.com/watch?v=oxv3vT6DPBM)
 - [UGCNETCSE](https://www.youtube.com/@UGCNETCSE): explain the components of ER diagram (https://www.youtube.com/watch?v=G6yqNdbygi4)
 - [GeeksforGeeks](https://www.geeksforgeeks.org/dbms/dbms/): DBMS tutorial
+- [Decomplexify](https://www.youtube.com/@decomplexify): Normalization (https://www.youtube.com/watch?v=GFQaEYEc8_8)
