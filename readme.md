@@ -11,6 +11,7 @@
 6. [Normalization](./Normalization/readme.md)
 7. [Relational Algebra](./relational-algebra/readme.md)
 8. [Relational Calculus](./Relational-Calculus/readme.md)
+9. [Structured Query Language (SQL)](./sql/readme.md)
 
 
 ----
@@ -20,3 +21,5 @@
 - [UGCNETCSE](https://www.youtube.com/@UGCNETCSE): explain the components of ER diagram (https://www.youtube.com/watch?v=G6yqNdbygi4)
 - [GeeksforGeeks](https://www.geeksforgeeks.org/dbms/dbms/): DBMS tutorial
 - [Decomplexify](https://www.youtube.com/@decomplexify): Normalization (https://www.youtube.com/watch?v=GFQaEYEc8_8)
+- [Apna Collage](https://www.youtube.com/@ApnaCollegeOfficial): SQL one shot (https://www.youtube.com/watch?v=hlGoQC332VM&t=126s)
+- [W3Schools](https://www.w3schools.com/): SQL tutorial (https://www.w3schools.com/sql/default.asp)
