@@ -1997,6 +1997,28 @@ Output:
 
 Here, employees are grouped by department, and the average salary is calculated separately for each group.
 
+Group by must contain all the columns mention in select statement, else it will throw an error 
+
+```sql
+-- This will trigger Error 1055
+SELECT department_id, employee_name, SUM(salary)
+FROM employees
+GROUP BY department_id;
+```
+Why it fails:\
+You grouped by `department_id`, but you also asked for `employee_name`. Since a department has multiple employees, MySQL doesn't know which employee name to display alongside the total salary.
+
+**Fix**
+
+If you genuinely need to see the data broken down by that extra column, add it to the grouping.
+```sql
+SELECT department_id, employee_name, SUM(salary)
+FROM employees
+GROUP BY department_id, employee_name;
+```
+
+
+
 ### Aggregate Functions with HAVING
 
 The `HAVING` clause filters groups based on aggregate conditions.
