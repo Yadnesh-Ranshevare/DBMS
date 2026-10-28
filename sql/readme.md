@@ -12,6 +12,9 @@
     - [SELECT - Reading Data From a Table](#select---reading-data-from-a-table)
     - [UPDATE - Updating Data in a Table](#update---updating-data-in-a-table)
     - [ DELETE - Deleting Data from a Table](#delete---deleting-data-from-a-table)
+7. [Operators in SQL](#operators-in-sql)
+8. [Aggregate Functions in SQL](#aggregate-functions-in-sql)
+9. [GROUP BY / HAVING](#group-by--having)
 
 ---
 # Introduction
@@ -1590,6 +1593,458 @@ Note: This example assumes the database permits this query structure and that th
 | `DELETE` with `BETWEEN`           | Deletes records within a range                    |
 | `DELETE` with a subquery          | Deletes records based on another query            |
 | `DELETE FROM table_name`          | Deletes all records but keeps the table structure |
+
+[Go To Top](#content)
+
+---
+# Operators in SQL
+operators are symbols or keywords used to perform operations on data, such as calculations, comparisons, and logical conditions.
+
+Types of operators in SQL
+
+
+| Operator Type | Operators                                   | Purpose                           |
+| ------------- | ------------------------------------------- | --------------------------------- |
+| Arithmetic    | `+`, `-`, `*`, `/`, `%`                     | Perform mathematical calculations |
+| Comparison    | `=`, `<>`, `!=`, `>`, `<`, `>=`, `<=`       | Compare values                    |
+| Logical       | `AND`, `OR`, `NOT`                          | Combine or reverse conditions     |
+| Special       | `BETWEEN`, `IN`, `LIKE`, `IS NULL`          | Match specific conditions         |
+| Set           | `UNION`, `UNION ALL`, `INTERSECT`, `EXCEPT` | Combine query results             |
+
+### 1. Arithmetic Operators
+
+Arithmetic operators are used to perform mathematical calculations on numeric values.
+
+| Operator | Meaning             | Example  | Result |
+| -------- | ------------------- | -------- | ------ |
+| `+`      | Addition            | `10 + 5` | 15     |
+| `-`      | Subtraction         | `10 - 5` | 5      |
+| `*`      | Multiplication      | `10 * 5` | 50     |
+| `/`      | Division            | `10 / 5` | 2      |
+| `%`      | Modulus (remainder) | `10 % 3` | 1      |
+
+Example:
+
+```sql
+SELECT salary, salary + 2000 AS increased_salary
+FROM Employees;
+```
+
+This query displays each employee's salary after adding 2000.
+
+### 2. Comparison (Relational) Operators
+
+Comparison operators compare two values and return TRUE or FALSE in a condition.
+
+| Operator | Meaning                    | Example       |
+| -------- | -------------------------- | ------------- |
+| `=`      | Equal to                   | `marks = 80`  |
+| `<>`     | Not equal to               | `marks <> 80` |
+| `!=`     | Not equal to (alternative) | `marks != 80` |
+| `>`      | Greater than               | `marks > 80`  |
+| `<`      | Less than                  | `marks < 80`  |
+| `>=`     | Greater than or equal to   | `marks >= 80` |
+| `<=`     | Less than or equal to      | `marks <= 80` |
+
+Example:
+
+```sql
+SELECT *
+FROM Students
+WHERE marks >= 60;
+```
+
+This query displays students who scored 60 marks or more.
+
+### 3. Logical Operators
+
+Logical operators combine multiple conditions or reverse a condition.
+
+| Operator | Meaning                                  | Example                            |
+| -------- | ---------------------------------------- | ---------------------------------- |
+| `AND`    | TRUE when all conditions are TRUE        | `marks >= 60 AND city = 'Mumbai'`  |
+| `OR`     | TRUE when at least one condition is TRUE | `city = 'Mumbai' OR city = 'Pune'` |
+| `NOT`    | Reverses a condition                     | `NOT (marks < 40)`                 |
+
+Example:
+
+```sql
+SELECT *
+FROM Students
+WHERE marks >= 60 AND city = 'Mumbai';
+```
+
+This query displays students who scored at least 60 marks and live in Mumbai.
+
+### 4. Special Operators
+
+Special operators are used to check ranges, match patterns, test membership, and handle NULL values.
+
+1. **BETWEEN**
+
+    Checks whether a value falls within a specified range, including both endpoints.
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE marks BETWEEN 60 AND 80;
+    ```
+
+    Displays students whose marks are between 60 and 80, inclusive.
+
+2. **IN**
+
+    Checks whether a value matches any value in a specified list.
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE city IN ('Mumbai', 'Pune', 'Nashik');
+    ```
+
+    Displays students living in Mumbai, Pune, or Nashik.
+
+3. **LIKE**
+
+    Searches for a pattern in a string using wildcards.
+
+    - `%` — Matches zero or more characters.
+    - `_` — Matches exactly one character.
+
+        ```sql
+        SELECT *
+        FROM Students
+        WHERE name LIKE 'A%';
+        ```
+
+    Displays students whose names start with `A`.
+
+    Another example:
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE name LIKE '_a%';
+    ```
+
+    Displays names whose second character is `a`.
+
+4. **IS NULL**
+
+    Checks whether a column contains a NULL value (missing or unknown data).
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE email IS NULL;
+    ```
+
+    Displays students whose email is NULL.
+
+5. **IS NOT NULL**
+
+    Checks whether a column contains a non-NULL value.
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE email IS NOT NULL;
+    ```
+
+    Displays students whose email is not NULL.
+
+6. **EXISTS**
+
+    Checks whether a subquery returns at least one row.
+
+    ```sql
+    SELECT *
+    FROM Students s
+    WHERE EXISTS (
+        SELECT 1
+        FROM Enrollments e
+        WHERE e.student_id = s.id
+    );
+    ```
+
+    Displays students who have at least one enrollment record.
+
+7. **ANY**
+
+    Compares a value with any value returned by a subquery. The condition is TRUE if at least one comparison succeeds.
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE marks > ANY (
+        SELECT marks
+        FROM Students
+        WHERE city = 'Pune'
+    );
+    ```
+
+    Displays students whose marks are greater than at least one student's marks in Pune.
+
+8. **ALL**
+
+    Compares a value with every value returned by a subquery. The condition must be TRUE for all comparisons.
+
+    ```sql
+    SELECT *
+    FROM Students
+    WHERE marks > ALL (
+        SELECT marks
+        FROM Students
+        WHERE city = 'Pune'
+    );
+    ```
+
+    Displays students whose marks are greater than every student's marks in Pune.
+
+### 5. Set Operators
+
+Set operators combine the results of two or more `SELECT` statements. The queries must return compatible numbers and types of columns.
+
+| Operator    | Meaning                                             |
+| ----------- | --------------------------------------------------- |
+| `UNION`     | Combines results and removes duplicates             |
+| `UNION ALL` | Combines results and retains duplicates             |
+| `INTERSECT` | Returns rows common to both results                 |
+| `EXCEPT`    | Returns rows in the first result but not the second |
+
+Example: UNION
+
+```sql
+SELECT city FROM Students
+UNION
+SELECT city FROM Teachers;
+```
+
+Returns a combined list of cities, with duplicate rows removed.
+
+Example: UNION ALL
+
+```sql
+SELECT city FROM Students
+UNION ALL
+SELECT city FROM Teachers;
+```
+
+Returns all cities, including duplicate rows.
+
+Example: INTERSECT
+
+```sql
+SELECT city FROM Students
+INTERSECT
+SELECT city FROM Teachers;
+```
+
+Returns cities present in both tables.
+
+Example: EXCEPT
+
+```sql
+SELECT city FROM Students
+EXCEPT
+SELECT city FROM Teachers;
+```
+
+Returns cities present among students but not among teachers.
+
+Note: Set-operator support and syntax can vary by database system. Oracle traditionally uses `MINUS` instead of `EXCEPT`.
+
+### 6. Assignment Operator
+
+The assignment operator assigns a value to a variable or, in supported SQL contexts, a variable-like object.
+
+In SQL Server, `=` is used for variable assignment.
+
+```sql
+DECLARE @salary INT;
+SET @salary = 30000;
+
+SELECT @salary AS salary;
+```
+
+Output:
+
+| salary |
+| ------ |
+| 30000  |
+
+Here, `SET` assigns the value `30000` to the variable `@salary`.
+
+
+
+[Go To Top](#content)
+
+---
+# Aggregate Functions in SQL
+
+Aggregate functions in SQL are used to perform calculations on a group of rows and return a **single valued** result.
+
+They are commonly used with the `SELECT`, `GROUP BY`, and `HAVING` clauses.
+
+### Types of Aggregate Functions
+
+Assume we have the following `Students` table:
+
+| id | name  | marks |
+| -- | ----- | ----- |
+| 1  | Amit  | 80    |
+| 2  | Rahul | 70    |
+| 3  | Priya | 90    |
+| 4  | Neha  | 60    |
+| 5  | Riya  | 100   |
+
+### 1. COUNT()
+
+Counts the number of rows or non-NULL values.
+
+```sql
+SELECT COUNT(*) AS total_students
+FROM Students;
+```
+
+Output: `5`
+
+- `COUNT(*)` counts all rows.
+- `COUNT(marks)` counts only rows where `marks` is not NULL.
+
+### 2. SUM()
+
+Calculates the total sum of values in a numeric column.
+
+```sql
+SELECT SUM(marks) AS total_marks
+FROM Students;
+```
+
+Output: `400`
+
+Calculation: $80 + 70 + 90 + 60 + 100 = 400$
+
+### 3. AVG()
+
+Calculates the average of values in a numeric column.
+
+```sql
+SELECT AVG(marks) AS average_marks
+FROM Students;
+```
+
+Output: `80`
+
+Calculation: $400 \div 5 = 80$
+
+### 4. MAX()
+
+Returns the maximum value from a column.
+
+```sql
+SELECT MAX(marks) AS highest_marks
+FROM Students;
+```
+
+Output: `100`
+
+### 5. MIN()
+
+Returns the minimum value from a column.
+
+```sql
+SELECT MIN(marks) AS lowest_marks
+FROM Students;
+```
+
+Output: `60`
+
+[Go To Top](#content)
+
+---
+
+# GROUP BY / HAVING
+`GROUP BY` divides your data into subsets based on matching column values, while `HAVING` filters those groups based on aggregate results.
+
+### Aggregate Functions with GROUP BY
+
+The `GROUP BY` clause groups rows with the same value so that aggregate functions can calculate a result for each group.
+
+Consider an `Employees` table:
+
+| name  | department | salary |
+| ----- | ---------- | ------ |
+| Amit  | IT         | 40000  |
+| Rahul | IT         | 50000  |
+| Priya | HR         | 30000  |
+| Neha  | HR         | 35000  |
+
+Example: Calculate the average salary of each department.
+
+```sql
+SELECT department, AVG(salary) AS avg_salary
+FROM Employees
+GROUP BY department;
+```
+
+Output:
+
+| department | avg_salary |
+| ---------- | ---------- |
+| IT         | 45000      |
+| HR         | 32500      |
+
+Here, employees are grouped by department, and the average salary is calculated separately for each group.
+
+### Aggregate Functions with HAVING
+
+The `HAVING` clause filters groups based on aggregate conditions.
+
+Example: Display departments whose average salary exceeds 35,000.
+
+```sql
+SELECT department, AVG(salary) AS avg_salary
+FROM Employees
+GROUP BY department
+HAVING AVG(salary) > 35000;
+```
+
+Output:
+
+| department | avg_salary |
+| ---------- | ---------- |
+| IT         | 45000      |
+
+Only the IT department satisfies the condition.
+
+### Important Rules
+
+- Aggregate functions generally ignore `NULL` values, except `COUNT(*)`, which counts rows.
+- `COUNT`, `SUM`, `AVG`, `MIN`, and `MAX` are the five commonly used aggregate functions.
+- `WHERE` filters individual rows before grouping.
+- `HAVING` filters groups after grouping.
+- Aggregate functions can be used without `GROUP BY` to calculate a result across the entire qualifying dataset.
+
+### Difference Between WHERE and HAVING
+
+| WHERE                                                                                   | HAVING                                  |
+| --------------------------------------------------------------------------------------- | --------------------------------------- |
+| Filters individual rows.                                                                | Filters groups.                         |
+| Applied before grouping.                                                                | Applied after grouping.                 |
+| Generally cannot directly filter using an aggregate expression at the same query level. | Commonly used with aggregate functions. |
+
+Example combining both:
+
+```sql
+SELECT department, AVG(salary) AS avg_salary
+FROM Employees
+WHERE salary >= 30000
+GROUP BY department
+HAVING AVG(salary) > 35000;
+```
+
+This first filters employees with salaries of at least 30,000, groups the remaining rows by department, and then keeps only departments with an average salary greater than 35,000.
 
 [Go To Top](#content)
 
