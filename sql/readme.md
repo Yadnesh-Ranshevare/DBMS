@@ -17,6 +17,7 @@
 7. [Operators in SQL](#operators-in-sql)
 8. [Aggregate Functions in SQL](#aggregate-functions-in-sql)
 9. [GROUP BY / HAVING](#group-by--having)
+10. [JOIN in SQL](#join-in-sql)
 
 ---
 # Introduction
@@ -2351,6 +2352,276 @@ HAVING AVG(salary) > 35000;
 ```
 
 This first filters employees with salaries of at least 30,000, groups the remaining rows by department, and then keeps only departments with an average salary greater than 35,000.
+
+[Go To Top](#content)
+
+---
+# JOIN in SQL
+
+The `JOIN` operation is used to combine rows from two or more tables based on a related column or a specified condition. It helps retrieve related data stored in different tables.
+
+<img src="./img/type-of-join.png" style="width:500px"/>
+
+> check out the [Relational Algebra (join) notes](../relational-algebra/readme.md#join-operation) to know more about join operation
+
+### Example Tables
+
+**Student Table**
+
+| id | name | dept_id |
+|---|---|---|
+| 1 | Amit | 101 |
+| 2 | Rahul | 102 |
+| 3 | Priya | 103 |
+| 4 | Neha | 104 |
+
+**Department Table**
+
+| dept_id | dept_name |
+|---|---|
+| 101 | IT |
+| 102 | Computer |
+| 103 | Mechanical |
+| 105 | Civil |
+
+### 1. INNER JOIN
+
+- Returns only the rows that have matching values in both tables.
+- Rows without a match are excluded from the result.
+
+Syntax:
+
+```sql
+SELECT columns
+FROM table1
+INNER JOIN table2
+ON table1.column = table2.column;
+```
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+INNER JOIN Department
+ON Student.dept_id = Department.dept_id;
+```
+
+This returns Amit–IT, Rahul–Computer, and Priya–Mechanical because their department IDs match in both tables.
+
+### 2. LEFT JOIN (LEFT OUTER JOIN)
+
+- Returns all rows from the left table and matching rows from the right table.
+- If no match exists, the right table's columns contain `NULL`.
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+LEFT JOIN Department
+ON Student.dept_id = Department.dept_id;
+```
+
+This returns all students, including Neha, whose department name will be `NULL` because department ID `104` does not exist in the Department table.
+
+### 3. RIGHT JOIN (RIGHT OUTER JOIN)
+
+- Returns all rows from the right table and matching rows from the left table.
+- If no match exists, the left table's columns contain `NULL`.
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+RIGHT JOIN Department
+ON Student.dept_id = Department.dept_id;
+```
+
+This returns all departments, including Civil, whose student name will be `NULL` because department ID `105` has no matching student.
+
+### 4. FULL JOIN (FULL OUTER JOIN)
+
+- Returns all matching and non-matching rows from both tables.
+- Unmatched columns contain `NULL`.
+- MySQL does not directly support `FULL OUTER JOIN`; it can be emulated using `LEFT JOIN`, `RIGHT JOIN`, and `UNION`.
+
+Example (PostgreSQL):
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+FULL OUTER JOIN Department
+ON Student.dept_id = Department.dept_id;
+```
+
+This returns all students and all departments, including Neha and Civil, even though they have no matching rows.
+
+### 5. CROSS JOIN
+
+- Returns the Cartesian product of two tables.
+- Every row from the first table is combined with every row from the second table.
+- If the tables contain \(m\) and \(n\) rows, the result contains \(m \times n\) rows.
+
+Syntax:
+
+```sql
+SELECT columns
+FROM table1
+CROSS JOIN table2;
+```
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+CROSS JOIN Department;
+```
+
+This combines every student with every department, producing 16 rows for the example tables (4 × 4).
+
+### 6. SELF JOIN
+
+- A self join joins a table with itself.
+- It is useful for comparing rows or finding relationships within the same table.
+- Table aliases are used to distinguish the two references.
+
+Example using an Employee table:
+
+| emp_id | name | manager_id |
+|---|---|---|
+| 1 | Amit | NULL |
+| 2 | Rahul | 1 |
+| 3 | Priya | 1 |
+
+```sql
+SELECT E.name AS Employee,
+       M.name AS Manager
+FROM Employee E
+LEFT JOIN Employee M
+ON E.manager_id = M.emp_id;
+```
+
+This displays each employee with their manager's name. Amit has no manager, so the manager name is `NULL`.
+
+### 7. EQUI JOIN
+
+- A join that uses the equality operator (`=`) in its join condition.
+- It can be performed using an `INNER JOIN` or another join type with an equality condition.
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+INNER JOIN Department
+ON Student.dept_id = Department.dept_id;
+```
+
+This combines students and departments whose department IDs are equal.
+
+### 8. NON-EQUI JOIN
+
+- A join that uses comparison operators such as `<`, `>`, `<=`, `>=`, or `BETWEEN` instead of only equality.
+- It is useful when matching values against ranges.
+
+Example using Employee and SalaryGrade tables:
+
+```sql
+SELECT E.name, S.grade
+FROM Employee E
+JOIN SalaryGrade S
+ON E.salary BETWEEN S.min_salary AND S.max_salary;
+```
+
+This matches each employee to the salary grade whose range contains their salary.
+
+### 9. EXCLUSIVE JOIN
+An exclusive join (often called an anti-join) is a query technique used to return rows that exist in one table but have no matching records in the other table.
+
+
+Two main type:
+1. LEFT EXCLUSIVE JOIN
+2. RIGHT EXCLUSIVE JOIN
+
+<img src="./img/exclusive-join.png" style="width:500px"/>
+
+An exclusive join is performed using a normal LEFT OUTER JOIN or RIGHT OUTER JOIN with a WHERE condition that checks whether the matching column from the opposite table is NULL. This condition filters the result to include only unmatched rows.
+
+<img src="./img/exclusive-join-2.png" style="width:500px"/>
+
+#### 1. LEFT EXCLUSIVE JOIN
+
+- Returns only the rows from the left table that do not have a matching row in the right table.
+- It is performed using a `LEFT JOIN` with a `WHERE` condition checking for `NULL` in the right table.
+- It is useful for finding records that have no corresponding match.
+
+Example:
+
+```sql
+SELECT Student.name, Student.dept_id
+FROM Student
+LEFT JOIN Department
+ON Student.dept_id = Department.dept_id
+WHERE Department.dept_id IS NULL;
+```
+
+This returns Neha because department ID `104` has no matching record in the Department table.
+
+#### 2. RIGHT EXCLUSIVE JOIN
+
+- Returns only the rows from the right table that do not have a matching row in the left table.
+- It is performed using a `RIGHT JOIN` with a `WHERE` condition checking for `NULL` in the left table.
+- It is useful for finding records in the right table that have no corresponding match.
+
+Example:
+
+```sql
+SELECT Student.name, Department.dept_name
+FROM Student
+RIGHT JOIN Department
+ON Student.dept_id = Department.dept_id
+WHERE Student.dept_id IS NULL;
+```
+
+This returns Civil because department ID `105` has no matching student in the Student table.
+
+#### Summary
+
+| JOIN Type | Purpose |
+|---|---|
+| `LEFT EXCLUSIVE JOIN` | Returns unmatched rows from the left table only |
+| `RIGHT EXCLUSIVE JOIN` | Returns unmatched rows from the right table only |
+
+**Note:** LEFT EXCLUSIVE JOIN and RIGHT EXCLUSIVE JOIN are descriptive terms, not separate SQL keywords. They are implemented using outer joins with `IS NULL` conditions.
+
+
+
+### Summary Table
+
+| JOIN Type | Purpose |
+|---|---|
+| `INNER JOIN` | Returns matching rows from both tables |
+| `LEFT JOIN` | Returns all left-table rows and matching right-table rows |
+| `RIGHT JOIN` | Returns all right-table rows and matching left-table rows |
+| `FULL OUTER JOIN` | Returns all rows from both tables |
+| `CROSS JOIN` | Returns every possible combination of rows |
+| `SELF JOIN` | Joins a table with itself |
+| `EQUI JOIN` | Joins using the equality operator (`=`) |
+| `NON-EQUI JOIN` | Joins using range or comparison conditions |
+
+
+
+### Important points:
+
+- `JOIN` is used to retrieve related data from multiple tables.
+- `ON` specifies the condition used to match rows.
+- `INNER`, `LEFT`, `RIGHT`, and `FULL OUTER` describe which matching or non-matching rows are retained.
+- `EQUI JOIN` and `NON-EQUI JOIN` describe the join condition, so they are not mutually exclusive with the other join types.
+- `FULL OUTER JOIN` support depends on the database system.
+
 
 [Go To Top](#content)
 
