@@ -11,7 +11,9 @@
     - [INSERT INTO - Adding Data Into a Table ](#insert-into---adding-data-into-a-table)
     - [SELECT - Reading Data From a Table](#select---reading-data-from-a-table)
     - [UPDATE - Updating Data in a Table](#update---updating-data-in-a-table)
+    - [ALTER - Modifying the Structure of a Table](#alter---modifying-the-structure-of-a-table)
     - [ DELETE - Deleting Data from a Table](#delete---deleting-data-from-a-table)
+    - [TRUNCATE - Removing All Records from a Table](#truncate---removing-all-records-from-a-table)
 7. [Operators in SQL](#operators-in-sql)
 8. [Aggregate Functions in SQL](#aggregate-functions-in-sql)
 9. [GROUP BY / HAVING](#group-by--having)
@@ -1458,6 +1460,172 @@ This updates the age to `21` only for students who live in Mumbai and are curren
 [Go To Top](#content)
 
 ---
+# ALTER - Modifying the Structure of a Table
+
+The `ALTER` statement is used to modify the structure of an existing table without deleting its records. It can add, modify, rename, or remove columns and constraints.
+
+### 1. ADD a New Column
+
+- Used to add a new column to an existing table.
+- The `ADD` keyword specifies the column name and its data type.
+
+Syntax:
+
+```sql
+ALTER TABLE table_name
+ADD column_name datatype;
+```
+
+Example:
+
+```sql
+ALTER TABLE Student
+ADD email VARCHAR(100);
+```
+
+This adds a new column named `email` to the `Student` table.
+
+### 2. ADD Multiple Columns
+
+- Used to add more than one column to an existing table.
+- Multiple columns can be added in a single statement in databases that support this syntax.
+
+Example (MySQL):
+
+```sql
+ALTER TABLE Student
+ADD phone VARCHAR(15),
+ADD city VARCHAR(50);
+```
+
+This adds the `phone` and `city` columns to the `Student` table.
+
+### 3. MODIFY a Column
+
+- Used to change the data type or size of an existing column.
+- The `MODIFY` keyword is supported by databases such as MySQL.
+
+Syntax:
+
+```sql
+ALTER TABLE table_name
+MODIFY column_name new_datatype;
+```
+
+Example:
+
+```sql
+ALTER TABLE Student
+MODIFY name VARCHAR(100);
+```
+
+This changes the data type or maximum length of the `name` column to `VARCHAR(100)`.
+
+### 4. DROP a Column
+
+- Used to permanently remove a column from an existing table.
+- The data stored in that column is also deleted.
+
+Syntax:
+
+```sql
+ALTER TABLE table_name
+DROP COLUMN column_name;
+```
+
+Example:
+
+```sql
+ALTER TABLE Student
+DROP COLUMN email;
+```
+
+This removes the `email` column from the `Student` table.
+
+**Warning:** Dropping a column permanently removes its data. Verify the column before executing this command.
+
+### 5. RENAME a Column
+
+- Used to change the name of an existing column.
+- The existing data in the column is retained.
+
+Example (MySQL 8.0+):
+
+```sql
+ALTER TABLE Student
+RENAME COLUMN name TO student_name;
+```
+
+This changes the column name from `name` to `student_name`.
+
+### 6. RENAME a Table
+
+- Used to change the name of an existing table.
+- The table's records remain unchanged.
+
+Syntax:
+
+```sql
+ALTER TABLE old_table_name
+RENAME TO new_table_name;
+```
+
+Example:
+
+```sql
+ALTER TABLE Student
+RENAME TO Students;
+```
+
+This changes the table name from `Student` to `Students`.
+
+### 7. ADD a Constraint
+
+- Used to add a constraint to an existing table.
+- Constraints help maintain data integrity by restricting invalid data.
+
+Example:
+
+```sql
+ALTER TABLE Student
+ADD CONSTRAINT unique_email UNIQUE (email);
+```
+
+This ensures that duplicate email values cannot be stored in the `email` column, subject to the database's handling of `NULL` values.
+
+### Difference Between ALTER and UPDATE
+
+| ALTER | UPDATE |
+|---|---|
+| Used to modify the structure of a table. | Used to modify existing records in a table. |
+| It is a DDL command. | It is a DML command. |
+| Can add, modify, rename, or drop columns. | Can change values stored in columns. |
+| Does not directly modify existing record values. | Does not change the table structure. |
+| Uses the `ALTER TABLE` statement. | Uses the `UPDATE` statement. |
+| Example: `ALTER TABLE Student ADD email VARCHAR(100);` | Example: `UPDATE Student SET age = 21 WHERE id = 1;` |
+
+**Example:**
+
+- **ALTER:** Adds a new `email` column to the `Student` table.
+- **UPDATE:** Changes the age of an existing student to `21`.
+
+### Summary Table
+
+| Query                                | Purpose                                      |
+| ------------------------------------ | -------------------------------------------- |
+| `ALTER TABLE ... ADD`                | Adds a new column                            |
+| `ALTER TABLE ... ADD` multiple times | Adds multiple columns                        |
+| `ALTER TABLE ... MODIFY`             | Changes a column's data type or size (MySQL) |
+| `ALTER TABLE ... DROP COLUMN`        | Removes a column                             |
+| `ALTER TABLE ... RENAME COLUMN`      | Renames a column                             |
+| `ALTER TABLE ... RENAME TO`          | Renames a table                              |
+| `ALTER TABLE ... ADD CONSTRAINT`     | Adds a constraint to a table                 |
+
+**Note:** `ALTER` is a DDL (Data Definition Language) command because it modifies the structure of a database object rather than directly updating its records. Syntax varies between database systems such as MySQL, PostgreSQL, and SQL Server.
+
+[Go To Top](#content)
+
+---
 # DELETE - Deleting Data from a Table
 
 The `DELETE` statement is used to remove existing records (rows) from a table. It can delete specific rows or all rows based on a condition.
@@ -1593,6 +1761,122 @@ Note: This example assumes the database permits this query structure and that th
 | `DELETE` with `BETWEEN`           | Deletes records within a range                    |
 | `DELETE` with a subquery          | Deletes records based on another query            |
 | `DELETE FROM table_name`          | Deletes all records but keeps the table structure |
+
+[Go To Top](#content)
+
+---
+# TRUNCATE - Removing All Records from a Table
+
+The `TRUNCATE` statement is used to remove all records from an existing table while keeping the table structure intact. It cannot be used to remove only selected rows.
+
+### TRUNCATE a Table
+
+- Used to delete all records from a table.
+- The table structure, column names, and data types remain unchanged.
+- It does not support the `WHERE` clause.
+
+Syntax:
+
+```sql
+TRUNCATE TABLE table_name;
+```
+
+Example:
+
+```sql
+TRUNCATE TABLE Student;
+```
+
+This removes all records from the `Student` table while keeping its structure intact.
+
+### TRUNCATE vs DELETE vs DROP
+
+- `TRUNCATE` removes all records from a table but keeps its structure.
+- `DELETE` removes selected records using the `WHERE` clause or all records if no condition is specified.
+- `DROP` removes the entire table, including its structure and data.
+
+**Example using DELETE:**
+
+```sql
+DELETE FROM Student
+WHERE id = 1;
+```
+
+This deletes only the student record whose ID is `1`.
+
+**Example using TRUNCATE:**
+
+```sql
+TRUNCATE TABLE Student;
+```
+
+This removes all student records while keeping the table structure intact.
+
+**Example using DROP:**
+
+```sql
+DROP TABLE Student;
+```
+
+This removes the entire `Student` table, including its structure and data.
+
+**Summary Table**
+
+| Feature | DELETE | TRUNCATE | DROP |
+|---|---|---|---|
+| Purpose | Removes records | Removes all records | Removes the entire table |
+| Type | DML | Generally DDL | DDL |
+| `WHERE` clause | Supported | Not supported | Not applicable |
+| Table structure | Preserved | Preserved | Removed |
+| Selective deletion | Yes | No | No |
+| Deletes all records | Yes, without `WHERE` | Yes | Yes, along with the table |
+
+**Remember:**
+- `DELETE` → Removes rows.
+- `TRUNCATE` → Removes all rows quickly.
+- `DROP` → Removes the entire table.
+
+### TRUNCATE and Table Structure
+
+- The table continues to exist after truncation.
+- Columns, data types, and table constraints generally remain unchanged.
+- In many database systems, the auto-increment counter is reset, but the exact behavior depends on the database system.
+
+Example:
+
+```sql
+TRUNCATE TABLE Student;
+```
+
+After execution, the `Student` table still exists, but it contains no records.
+
+### Summary Table
+
+| Query / Feature | Purpose |
+|---|---|
+| `TRUNCATE TABLE table_name` | Removes all records from a table |
+| `TRUNCATE` without `WHERE` | Always affects the entire table |
+| Table structure | Remains unchanged |
+| Auto-increment counter | May reset, depending on the DBMS |
+| `TRUNCATE` vs `DELETE` | TRUNCATE removes all rows; DELETE can remove selected rows |
+
+### Difference Between TRUNCATE and UPDATE
+
+| TRUNCATE | UPDATE |
+|---|---|
+| Removes all records from a table. | Modifies existing record values. |
+| It is generally classified as a DDL command. | It is a DML command. |
+| Does not support the `WHERE` clause. | Supports the `WHERE` clause. |
+| Keeps the table structure intact. | Keeps both table structure and records intact, except for modified values. |
+| Example: `TRUNCATE TABLE Student;` | Example: `UPDATE Student SET age = 21 WHERE id = 1;` |
+
+**Important points:**
+
+- `TRUNCATE` removes all rows but does not remove the table itself.
+- Use `DELETE` when you need to remove specific records.
+- Use `DROP TABLE` when you want to remove the entire table, including its structure.
+- Transaction rollback and trigger behavior for `TRUNCATE` vary between database systems. Always verify the DBMS behavior before executing it on important data.
+
 
 [Go To Top](#content)
 
