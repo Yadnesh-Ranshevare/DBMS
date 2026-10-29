@@ -2611,6 +2611,8 @@ This returns Civil because department ID `105` has no matching student in the St
 | `SELF JOIN` | Joins a table with itself |
 | `EQUI JOIN` | Joins using the equality operator (`=`) |
 | `NON-EQUI JOIN` | Joins using range or comparison conditions |
+| `LEFT EXCLUSIVE JOIN`  | Returns only unmatched rows from the left table.  |
+| `RIGHT EXCLUSIVE JOIN` | Returns only unmatched rows from the right table. |
 
 
 
@@ -2621,6 +2623,7 @@ This returns Civil because department ID `105` has no matching student in the St
 - `INNER`, `LEFT`, `RIGHT`, and `FULL OUTER` describe which matching or non-matching rows are retained.
 - `EQUI JOIN` and `NON-EQUI JOIN` describe the join condition, so they are not mutually exclusive with the other join types.
 - `FULL OUTER JOIN` support depends on the database system.
+- Exclusive joins (anti-joins) return only unmatched rows and are implemented using `LEFT` or `RIGHT OUTER JOIN` with a `WHERE ... IS NULL` condition.
 
 
 [Go To Top](#content)
