@@ -18,6 +18,8 @@
 8. [Aggregate Functions in SQL](#aggregate-functions-in-sql)
 9. [GROUP BY / HAVING](#group-by--having)
 10. [JOIN in SQL](#join-in-sql)
+11. [UNION in SQL](#union-in-sql)
+12. [SUBQUERY in SQL](#subquery-in-sql)
 
 ---
 # Introduction
@@ -2624,6 +2626,440 @@ This returns Civil because department ID `105` has no matching student in the St
 - `EQUI JOIN` and `NON-EQUI JOIN` describe the join condition, so they are not mutually exclusive with the other join types.
 - `FULL OUTER JOIN` support depends on the database system.
 - Exclusive joins (anti-joins) return only unmatched rows and are implemented using `LEFT` or `RIGHT OUTER JOIN` with a `WHERE ... IS NULL` condition.
+
+
+[Go To Top](#content)
+
+---
+# UNION in SQL
+
+The `UNION` operator is used to combine the results of two or more `SELECT` queries into a single result set. 
+
+It combines rows from multiple queries and removes duplicate records by default.
+
+Important conditions for using UNION:
+
+- Each `SELECT` statement must have the same number of columns.
+- Corresponding columns must have compatible data types.
+- Columns must appear in the same order in each `SELECT` statement.
+- The column names in the final result are taken from the first `SELECT` statement.
+
+### Example Tables
+
+Student Table
+
+| id | name  | city   |
+| -- | ----- | ------ |
+| 1  | Amit  | Mumbai |
+| 2  | Rahul | Pune   |
+| 3  | Priya | Nashik |
+
+Alumni Table
+
+| id | name  | city   |
+| -- | ----- | ------ |
+| 2  | Rahul | Pune   |
+| 4  | Neha  | Thane  |
+| 5  | Karan | Mumbai |
+
+### 1. UNION
+
+- Combines the results of two or more `SELECT` statements.
+- Automatically removes duplicate rows from the final result.
+- Each `SELECT` statement must have the same number of columns with compatible data types.
+
+Syntax:
+
+```sql
+SELECT column1, column2
+FROM table1
+
+UNION
+
+SELECT column1, column2
+FROM table2;
+```
+
+Example:
+
+```sql
+SELECT name, city
+FROM Student
+
+UNION
+
+SELECT name, city
+FROM Alumni;
+```
+
+This returns all unique records from both tables. Rahul–Pune appears only once because `UNION` removes duplicate rows.
+
+Output:
+
+| name  | city   |
+| ----- | ------ |
+| Amit  | Mumbai |
+| Rahul | Pune   |
+| Priya | Nashik |
+| Neha  | Thane  |
+| Karan | Mumbai |
+
+Note: The order of rows is not guaranteed unless ORDER BY is used.
+
+### 2. UNION ALL
+
+- Combines the results of two or more `SELECT` statements.
+- Unlike `UNION`, it does not remove duplicate rows.
+- It generally performs faster than `UNION` because it does not need to eliminate duplicates.
+
+Syntax:
+
+```sql
+SELECT column1, column2
+FROM table1
+
+UNION ALL
+
+SELECT column1, column2
+FROM table2;
+```
+
+Example:
+
+```sql
+SELECT name, city
+FROM Student
+
+UNION ALL
+
+SELECT name, city
+FROM Alumni;
+```
+
+This returns all records from both tables, including duplicate records. Rahul–Pune appears twice because `UNION ALL` retains duplicates.
+
+Output:
+
+| name  | city   |
+| ----- | ------ |
+| Amit  | Mumbai |
+| Rahul | Pune   |
+| Priya | Nashik |
+| Rahul | Pune   |
+| Neha  | Thane  |
+| Karan | Mumbai |
+
+### 3. UNION with ORDER BY
+
+- `ORDER BY` is used to sort the combined result of multiple `SELECT` statements.
+- It is generally written at the end of the entire `UNION` query.
+- It can sort the result in ascending (`ASC`) or descending (`DESC`) order.
+
+Example:
+
+```sql
+SELECT name, city
+FROM Student
+
+UNION
+
+SELECT name, city
+FROM Alumni
+
+ORDER BY name ASC;
+```
+
+This combines unique records from both tables and sorts the final result alphabetically by name.
+
+### 4. UNION with WHERE Clause
+
+- A `WHERE` clause can be used in individual `SELECT` statements to filter records before combining them.
+- Each query can have its own filtering condition.
+
+Example:
+
+```sql
+SELECT name, city
+FROM Student
+WHERE city = 'Mumbai'
+
+UNION
+
+SELECT name, city
+FROM Alumni
+WHERE city = 'Mumbai';
+```
+
+This returns unique records of students and alumni who belong to Mumbai.
+
+### Summary Table
+
+| Feature           | UNION                  | UNION ALL              |
+| ----------------- | ---------------------- | ---------------------- |
+| Purpose           | Combines query results | Combines query results |
+| Duplicate records | Removes duplicates     | Retains duplicates     |
+| Performance       | Generally slower       | Generally faster       |
+| Number of rows    | May be fewer           | Includes all rows      |
+| Sorting           | No guaranteed order    | No guaranteed order    |
+
+### Important Points
+
+- `UNION` is used to combine results of multiple `SELECT` statements.
+- `UNION` removes duplicate rows automatically.
+- `UNION ALL` retains duplicate rows.
+- Both operators require the same number of columns in each `SELECT` statement.
+- Corresponding columns must have compatible data types.
+- Column names in the final result are taken from the first `SELECT` statement.
+- `ORDER BY` is generally applied at the end of the complete `UNION` query.
+- `UNION` and `UNION ALL` combine rows vertically, unlike `JOIN`, which combines columns horizontally.
+- `UNION` is a set operation in SQL, whereas `JOIN` is used to combine related data from multiple tables.
+
+[Go To Top](#content)
+
+---
+# SUBQUERY in SQL
+
+A `SUBQUERY` is a query written inside another SQL query. It is also called an inner query or nested query. The result of the inner query is used by the outer query to perform operations or retrieve data.
+
+- A subquery is enclosed within parentheses `()`.
+- It can be used with `SELECT`, `INSERT`, `UPDATE`, and `DELETE` statements.
+- A subquery can be used with operators such as `=`, `>`, `<`, `IN`, `NOT IN`, `EXISTS`, and `ANY`.
+- The inner query is generally executed before the outer query, depending on the query execution plan.
+
+### Example Tables
+
+Employee Table
+
+| emp_id | name  | salary | dept_id |
+| ------ | ----- | ------ | ------- |
+| 1      | Amit  | 50000  | 101     |
+| 2      | Rahul | 60000  | 102     |
+| 3      | Priya | 70000  | 101     |
+| 4      | Neha  | 40000  | 103     |
+| 5      | Karan | 80000  | 102     |
+
+Department Table
+
+| dept_id | dept_name  |
+| ------- | ---------- |
+| 101     | IT         |
+| 102     | Computer   |
+| 103     | Mechanical |
+
+### 1. Single-Row Subquery
+
+- Returns only one row as the result of the inner query.
+- It is generally used with comparison operators such as `=`, `>`, `<`, `>=`, and `<=`.
+- The outer query uses the single value returned by the inner query.
+
+Example:
+
+```sql
+SELECT name, salary
+FROM Employee
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM Employee
+);
+```
+
+The inner query calculates the average salary of all employees. The outer query returns employees whose salary is greater than the average salary.
+
+### 2. Multiple-Row Subquery
+
+- Returns multiple rows from the inner query.
+- It is generally used with operators such as `IN`, `NOT IN`, `ANY`, and `ALL`.
+- It helps retrieve records based on multiple values returned by the inner query.
+
+Example:
+
+```sql
+SELECT name, dept_id
+FROM Employee
+WHERE dept_id IN (
+    SELECT dept_id
+    FROM Department
+    WHERE dept_name IN ('IT', 'Computer')
+);
+```
+
+The inner query returns department IDs of IT and Computer departments. The outer query retrieves employees belonging to those departments.
+
+### 3. Multiple-Column Subquery
+
+- Returns more than one column from the inner query.
+- It is used when multiple column values are required to identify matching records.
+- It can use multiple-column comparisons.
+
+Example:
+
+```sql
+SELECT name, dept_id, salary
+FROM Employee
+WHERE (dept_id, salary) IN (
+    SELECT dept_id, MAX(salary)
+    FROM Employee
+    GROUP BY dept_id
+);
+```
+
+The inner query returns the maximum salary for each department along with its department ID. The outer query retrieves employees who receive the highest salary in their respective departments.
+
+Note: Row-value comparison syntax is supported by databases such as MySQL and PostgreSQL.
+
+### 4. Nested Subquery
+
+- A subquery written inside another subquery is called a nested subquery.
+- It contains multiple levels of queries.
+- The result of the innermost query is used by the next query, and finally by the outer query.
+
+Example:
+
+```sql
+SELECT name, salary
+FROM Employee
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM Employee
+    WHERE dept_id IN (
+        SELECT dept_id
+        FROM Department
+        WHERE dept_name = 'IT'
+    )
+);
+```
+
+The innermost query finds the department ID of IT. The middle query calculates the average salary of employees in IT. The outer query retrieves employees whose salary is greater than that average.
+
+### 5. Correlated Subquery
+
+- A correlated subquery is a subquery that depends on the outer query for its values.
+- It references one or more columns from the outer query.
+- Unlike a simple subquery, it cannot be evaluated independently of the outer query.
+- It is logically evaluated for each row considered by the outer query, although the database optimizer may execute it differently.
+
+Example:
+
+```sql
+SELECT E1.name, E1.salary, E1.dept_id
+FROM Employee E1
+WHERE E1.salary > (
+    SELECT AVG(E2.salary)
+    FROM Employee E2
+    WHERE E2.dept_id = E1.dept_id
+);
+```
+
+The inner query calculates the average salary of the department of the current employee. The outer query returns employees whose salary is greater than their department's average salary.
+
+### 6. Subquery with EXISTS
+
+- `EXISTS` checks whether the inner query returns at least one row.
+- It returns TRUE if at least one matching record exists; otherwise, it returns FALSE.
+- It is commonly used with correlated subqueries.
+
+Example:
+
+```sql
+SELECT dept_name
+FROM Department D
+WHERE EXISTS (
+    SELECT 1
+    FROM Employee E
+    WHERE E.dept_id = D.dept_id
+);
+```
+
+This returns departments that have at least one employee.
+
+### 7. Subquery with NOT EXISTS
+
+- `NOT EXISTS` checks whether the inner query returns no rows.
+- It returns TRUE if no matching record exists.
+- It is useful for finding records that do not have corresponding records in another table.
+
+Example:
+
+```sql
+SELECT dept_name
+FROM Department D
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM Employee E
+    WHERE E.dept_id = D.dept_id
+);
+```
+
+This returns departments that do not have any employees.
+
+### 8. Subquery with ANY
+
+- `ANY` compares a value with any value returned by the inner query.
+- The condition becomes TRUE if at least one comparison is TRUE.
+- It is used with comparison operators such as `=`, `>`, `<`, `>=`, and `<=`.
+
+Example:
+
+```sql
+SELECT name, salary
+FROM Employee
+WHERE salary > ANY (
+    SELECT salary
+    FROM Employee
+    WHERE dept_id = 101
+);
+```
+
+This returns employees whose salary is greater than at least one employee's salary in department 101.
+
+### 9. Subquery with ALL
+
+- `ALL` compares a value with every value returned by the inner query.
+- The condition becomes TRUE only if all comparisons are TRUE.
+- It is used with comparison operators such as `=`, `>`, `<`, `>=`, and `<=`.
+
+Example:
+
+```sql
+SELECT name, salary
+FROM Employee
+WHERE salary > ALL (
+    SELECT salary
+    FROM Employee
+    WHERE dept_id = 101
+);
+```
+
+This returns employees whose salary is greater than the salaries of all employees in department 101.
+
+### Summary Table
+
+| Subquery Type   | Purpose                                              |
+| --------------- | ---------------------------------------------------- |
+| Single-Row      | Returns only one row                                 |
+| Multiple-Row    | Returns multiple rows                                |
+| Multiple-Column | Returns multiple columns                             |
+| Nested          | Contains a subquery inside another subquery          |
+| Correlated      | Depends on values from the outer query               |
+| EXISTS          | Checks whether matching rows exist                   |
+| NOT EXISTS      | Checks whether matching rows do not exist            |
+| ANY             | Condition is TRUE if at least one comparison matches |
+| ALL             | Condition is TRUE if every comparison matches        |
+
+### Important Points
+
+- A subquery is also known as an inner query or nested query.
+- A subquery must be enclosed within parentheses `()`.
+- The inner query provides results to the outer query.
+- A single-row subquery generally uses comparison operators such as `=`, `>`, and `<`.
+- A multiple-row subquery commonly uses `IN`, `ANY`, and `ALL`.
+- A correlated subquery depends on the outer query.
+- `EXISTS` and `NOT EXISTS` check the existence of matching records.
+- Subqueries can be used with `SELECT`, `INSERT`, `UPDATE`, and `DELETE` statements.
+- Subqueries can also be used in `FROM` and `SELECT` clauses, not just `WHERE`.
+- A subquery is useful for breaking complex queries into smaller logical queries.
+
+Important distinction: `Single-row`, `Multiple-row`, and `Multiple-column` describe the shape of the result returned by a subquery. `Nested` and `Correlated` describe how the subquery is structured or related to the outer query. `EXISTS`, `ANY`, and `ALL` are operators used with subqueries. They are not mutually exclusive categories.
 
 
 [Go To Top](#content)
